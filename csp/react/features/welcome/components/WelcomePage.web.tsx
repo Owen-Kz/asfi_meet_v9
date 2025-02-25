@@ -330,12 +330,12 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
 
 
             // Send the room data to the Node.js
-            fetch('https://www.asfischolar.net/createMeetingFromRequest', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ room })
+            fetch(`https://www.asfischolar.net/createMeetingFromRequest?rid=${room}`, {
+                // method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                // body: JSON.stringify({ room })
             })
             .then(response => response.json())
             .then(data => {
