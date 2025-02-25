@@ -23,7 +23,7 @@ const EndMeetingButton = (): JSX.Element => {
         sendAnalytics(createToolbarEvent('hangup'));
 
         // Use Linking to open the URL when the button is clicked
-        Linking.openURL('https://asfischolar.net').catch(err => console.error('Failed to open URL:', err));
+        Linking.openURL('https://www.asfischolar.net').catch(err => console.error('Failed to open URL:', err));
 
         // Optionally, dispatch appNavigate if needed for state management (though not necessary for redirect)
         dispatch(appNavigate(undefined));

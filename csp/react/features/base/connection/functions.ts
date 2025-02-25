@@ -62,7 +62,7 @@ export function getInviteURL(stateOrGetState: IStateful): string {
         const meetingId
             = state['features/base/config'].brandingRoomAlias || urlWithoutParams.pathname.replace(/\//, '');
 
-        return `https://asfischolar.net/join/${meetingId}`;
+        return `https://www.asfischolar.net/join/${meetingId}`;
     }
 
     return urlWithoutParams.href;
