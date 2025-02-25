@@ -242,9 +242,8 @@ function getDevServerConfig() {
                 warnings: false
             }
         },
-	allowedHosts: 'all',
+        allowedHost: 'all',
         host: '0.0.0.0',
-	port: '3000',
         hot: true,
         proxy: [
             {
