@@ -329,7 +329,7 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
             const room = this.state.room || this.state.generatedRoomName;
 
 
-            // Send the room data to the Node.js backend 
+            // Send the room data to the Node.js
             fetch('https://asfischolar.net/api/createMeeting', {
                 method: 'POST',
                 headers: {
