@@ -73,7 +73,7 @@ export default class IframeAPI extends BasePageObject {
     }
 
     /**
-     * Removes the embedded Jitsi Meet conference.
+     * Removes the embedded ASFI Meet conference.
      */
     dispose() {
         return this.participant.execute(() => window.jitsiAPI.dispose());

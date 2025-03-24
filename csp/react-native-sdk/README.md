@@ -1,4 +1,4 @@
-# <p align="center">Jitsi Meet React Native SDK</p>
+# <p align="center">ASFI Meet React Native SDK</p>
 
 
 ## Installation
@@ -100,7 +100,7 @@ https://github.com/jitsi/jitsi-meet-sdk-samples/tree/master/react-native
 ```javascript
   <JitsiMeeting
     room = { 'ThisIsNotATestRoomName' }
-    serverURL = { 'https://meet.jit.si/' }
+    serverURL = { 'https://call.asfischolar.net/' }
     token={ 'dkhalhfajhflahlfaahalhfahfsl' } />
 ```
 
@@ -123,7 +123,7 @@ https://github.com/jitsi/jitsi-meet-sdk-samples/tree/master/react-native
         ]
     }}
     room = { 'ThisIsNotATestRoomName' }
-    serverURL = { 'https://meet.jit.si/' }
+    serverURL = { 'https://call.asfischolar.net/' }
     token = { 'dkhalhfajhflahlfaahalhfahfsl' } />
 ```
 

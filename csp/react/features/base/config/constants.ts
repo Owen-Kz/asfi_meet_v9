@@ -40,4 +40,4 @@ export const DEFAULT_PRIVACY_URL = 'https://asfischolar.net/meet/privacy';
 /**
  * The URL at which the help centre is available to the user.
  */
-export const DEFAULT_HELP_CENTRE_URL = 'https://web-cdn.jitsi.net/faq/meet-faq.html';
+export const DEFAULT_HELP_CENTRE_URL = 'https://asfischolar.net/faq/';

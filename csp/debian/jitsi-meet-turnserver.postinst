@@ -26,7 +26,7 @@ case "$1" in
         db_get jitsi-videobridge/jvb-hostname
         if [ -z "$RET" ] ; then
             # server hostname
-            db_set jitsi-videobridge/jvb-hostname "localhost"
+            db_set jitsi-videobridge/jvb-hostname "call.asfischolar.net"
             db_input critical jitsi-videobridge/jvb-hostname || true
             db_go
         fi
@@ -100,7 +100,7 @@ denied-peer-ip=240.0.0.0-255.255.255.255" >> $TURN_CONFIG
 
         # no turn config exists, lt's copy template and fill it in
         cp /usr/share/jitsi-meet-turnserver/turnserver.conf $TURN_CONFIG
-        sed -i "s/jitsi-meet.example.com/$JVB_HOSTNAME/g" $TURN_CONFIG
+        sed -i "s/call.asfischolar.net/$JVB_HOSTNAME/g" $TURN_CONFIG
         sed -i "s/__turnSecret__/$TURN_SECRET/g" $TURN_CONFIG
 
         # SSL settings

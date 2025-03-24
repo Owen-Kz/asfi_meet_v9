@@ -31,7 +31,7 @@ case "$1" in
         db_get jitsi-videobridge/jvb-hostname
         if [ -z "$RET" ] ; then
             # server hostname
-            db_set jitsi-videobridge/jvb-hostname "localhost"
+            db_set jitsi-videobridge/jvb-hostname "call.asfischolar.net"
             db_input critical jitsi-videobridge/jvb-hostname || true
             db_go
         fi

@@ -65,7 +65,7 @@ export const config: WebdriverIO.MultiremoteConfig = {
     ],
     maxInstances: parseInt(process.env.MAX_INSTANCES || '1', 10), // if changing check onWorkerStart logic
 
-    baseUrl: process.env.BASE_URL || 'https://alpha.jitsi.net/torture/',
+    baseUrl: process.env.BASE_URL || 'https://call.asfischolar.net/torture/',
     tsConfigPath: './tsconfig.json',
 
     // Default timeout for all waitForXXX commands.
