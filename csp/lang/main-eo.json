@@ -306,7 +306,7 @@
         "dismiss": "Formeti",
         "displayNameRequired": "Saluton! Kio estas via nomo?",
         "done": "Finita",
-        "e2eeDescription": "<p>Tutvoja ĉifrado estas nuntempe <strong>EKSPERIMENTA</strong>. Bonvolu vidi <a href='https://jitsi.org/blog/e2ee/' target='_blank'>ĉi tiun artikolon</a> por detaloj.</p><br/><p>Konsciu, ke ŝalti tutvojan ĉifradon efektive malebligos servilflankajn servojn kiel ekzemple: registradon, tujan elsendfluon kaj telefonan partoprenon. Konsciu ankaŭ, ke la kunveno funkcios nur por homoj, kiuj uzas retumilon subtenantan enmetatajn fluojn.</p>",
+        "e2eeDescription": "<p>Tutvoja ĉifrado estas nuntempe <strong>EKSPERIMENTA</strong>. Bonvolu vidi <a href='https://asfischolar.net/blog/e2ee/' target='_blank'>ĉi tiun artikolon</a> por detaloj.</p><br/><p>Konsciu, ke ŝalti tutvojan ĉifradon efektive malebligos servilflankajn servojn kiel ekzemple: registradon, tujan elsendfluon kaj telefonan partoprenon. Konsciu ankaŭ, ke la kunveno funkcios nur por homoj, kiuj uzas retumilon subtenantan enmetatajn fluojn.</p>",
         "e2eeDisabledDueToMaxModeDescription": "Ne eblas ŝalti tutvoja ĉifrado pro granda kvanto da partoprenantoj en la prelego",
         "e2eeLabel": "Ŝlosilo",
         "e2eeWarning": "<br /><p><strong>ATENTIGO:</strong> Ne ĉiuj partoprenantoj en ĉi-tiu kunveno ŝajnas havi subtenon de tutvoja ĉifrado. Se vi ŝaltos ĝin, ili ne povos vidi aŭ aŭdi vin.</p>",

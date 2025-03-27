@@ -42,6 +42,7 @@ export function appNavigate(uri?: string) {
 
         // If the specified location (URI) does not identify a host, use the app's
         // default.
+    
         if (!location?.host) {
             const defaultLocation = parseURIString(getDefaultURL(getState));
 

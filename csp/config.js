@@ -440,7 +440,7 @@ var config = {
     //    // RegExp string that validates the stream key input field
     //    validatorRegExpString: '^(?:[a-zA-Z0-9]{4}(?:-(?!$)|$)){4}',
     //    // Documentation reference for the live streaming feature.
-    //    helpLink: 'https://jitsi.org/live'
+    //    helpLink: 'https://asfischolar.net/live'
     // },
 
     // DEPRECATED. Use liveStreaming.enabled instead.
@@ -1309,8 +1309,8 @@ var config = {
     // // The terms, privacy and help centre URL's.
     // legalUrls: {
     //     helpCentre: 'https://web-cdn.call.asfischolar.net/faq/meet-faq.html',
-    //     privacy: 'https://jitsi.org/meet/privacy',
-    //     terms: 'https://jitsi.org/meet/terms'
+    //     privacy: 'https://asfischolar.net/meet/privacy',
+    //     terms: 'https://asfischolar.net/meet/terms'
     // },
 
     // A property to disable the right click context menu for localVideo

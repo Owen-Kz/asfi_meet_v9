@@ -201,9 +201,9 @@ class Watermarks extends Component<IProps, State> {
             return (
                 <a
                     className = 'poweredby'
-                    href = 'http://jitsi.org'
+                    href = 'https://asfischolar.org'
                     target = '_new'>
-                    <span>{ t('poweredby') } jitsi.org</span>
+                    <span>{ t('poweredby') } asfiScholar.org</span>
                 </a>
             );
         }
@@ -244,15 +244,15 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
     if (useDynamicBrandingData) {
         if (isVpaasMeeting(state)) {
             // don't show logo if request fails or no logo set for vpaas meetings
-            _showJitsiWatermark = !customizationFailed && Boolean(logoImageUrl);
+            _showJitsiWatermark = !customizationFailed && Boolean('https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg');
         } else if (defaultBranding) {
-            _logoUrl = defaultLogoUrl;
-            _logoLink = JITSI_WATERMARK_LINK;
+            _logoUrl = 'https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg';
+            _logoLink = 'https://asfischolar.org';
         }
     } else {
         // When there is no custom branding data use defaults
-        _logoUrl = ownProps.defaultJitsiLogoURL || defaultLogoUrl;
-        _logoLink = JITSI_WATERMARK_LINK;
+        _logoUrl = 'https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg';
+        _logoLink = 'https://asfischolar.org';
     }
 
     return {

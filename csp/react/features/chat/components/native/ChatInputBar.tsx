@@ -101,6 +101,7 @@ class ChatInputBar extends Component<IProps, IState> {
                     placeholder = { this.props.t('chat.fieldPlaceHolder') }
                     returnKeyType = 'send'
                     value = { this.state.message } />
+         
                 <IconButton
                     disabled = { !this.state.message }
                     id = { this.props.t('chat.sendButton') }

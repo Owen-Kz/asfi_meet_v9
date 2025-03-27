@@ -462,7 +462,7 @@
         "emailField": "మీ ఈమెయిలు చిరునామా ఇవ్వండి",
         "enableDialogPasswordField": "సంకేతపదం పెట్టండి (ఐచ్ఛికం)",
         "enableDialogSubmit": "చేతనించు",
-        "enableDialogText": "Lobby mode lets you protect your meeting by only allowing people to enter after a formal approval by a moderator.",
+        "enableDialogText": "Lobby mode lets you protect your meeting by only allowing people to enter after a formal approval by a Host.",
         "enterPasswordButton": "సమావేశ సంకేతపదం ఇవ్వండి",
         "enterPasswordTitle": "సమావేశంలో చేరడానికి సంకేతపదం ఇవ్వండి",
         "invalidPassword": "చెల్లని సంకేతపదం",
@@ -502,7 +502,7 @@
         "me": "నేను",
         "messages": {
             "engaged": "స్థానిక రికార్డింగు నడుస్తూన్నది.",
-            "finished": "Recording session {{token}} finished. Please send the recorded file to the moderator.",
+            "finished": "Recording session {{token}} finished. Please send the recorded file to the Host.",
             "finishedModerator": "Recording session {{token}} finished. The recording of the local track has been saved. Please ask the other participants to submit their recordings.",
             "notModerator": "మీరు మధ్యవర్తి కాదు. మీరు స్థానిక రికార్డింగును మొదలుపెట్టలేరు, ఆపివేయలేరు."
         },
@@ -697,7 +697,7 @@
     },
     "security": {
         "about": "You can add a $t(lockRoomPassword) to your meeting. Participants will need to provide the $t(lockRoomPassword) before they are allowed to join the meeting.",
-        "aboutReadOnly": "Moderator participants can add a $t(lockRoomPassword) to the meeting. Participants will need to provide the $t(lockRoomPassword) before they are allowed to join the meeting.",
+        "aboutReadOnly": "Host participants can add a $t(lockRoomPassword) to the meeting. Participants will need to provide the $t(lockRoomPassword) before they are allowed to join the meeting.",
         "insecureRoomNameWarning": "The room name is unsafe. Unwanted participants may join your conference. Consider securing your meeting using the security button.",
         "securityOptions": "భద్రతా ఎంపికలు"
     },
@@ -787,7 +787,7 @@
             "embedMeeting": "Embed meeting",
             "feedback": "Leave feedback",
             "fullScreen": "Toggle full screen",
-            "grantModerator": "Grant Moderator",
+            "grantModerator": "Grant Host",
             "hangup": "Leave the call",
             "help": "సహాయం",
             "invite": "Invite people",
@@ -978,7 +978,7 @@
         "info": "డయలింగ్ సమాచారం",
         "jitsiOnMobile": "Jitsi on mobile – download our apps and start a meeting from anywhere",
         "join": "CREATE / JOIN",
-        "moderatedMessage": "Or <a href=\"{{url}}\" rel=\"noopener noreferrer\" target=\"_blank\">book a meeting URL</a> in advance where you are the only moderator.",
+        "moderatedMessage": "Or <a href=\"{{url}}\" rel=\"noopener noreferrer\" target=\"_blank\">book a meeting URL</a> in advance where you are the only Host.",
         "privacy": "అంతరంగికత",
         "recentList": "ఇటీవల",
         "recentListDelete": "పద్దును తొలగించు",

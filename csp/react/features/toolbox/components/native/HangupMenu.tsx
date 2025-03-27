@@ -34,16 +34,14 @@ function HangupMenu() {
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('endmeeting'));
         dispatch(endConference());
+        window.location.href = "https://asfischolar.net";
     }, [ hideSheet ]);
 
     const handleLeaveConference = useCallback(() => {
         dispatch(hideSheet());
         sendAnalytics(createToolbarEvent('hangup'));
 
-        // Use Linking to open the URL when the button is clicked
-
-        Linking.openURL('https://www.asfischolar.net').catch(err => console.error('Failed to open URL:', err));
-
+    
         dispatch(appNavigate(undefined));
     }, [ hideSheet ]);
 

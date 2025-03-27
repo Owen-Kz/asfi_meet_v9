@@ -39,6 +39,8 @@ export const LeaveConferenceButton = (props: IProps) => {
 
     const onLeaveConference = useCallback(() => {
         sendAnalytics(createToolbarEvent('hangup'));
+            // Use Linking to open the URL when the button is clicked
+        window.location.href = "https://asfischolar.org";
         dispatch(leaveConference());
     }, [ dispatch ]);
 

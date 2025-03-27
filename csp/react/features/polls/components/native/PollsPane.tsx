@@ -14,6 +14,7 @@ import { TabBarLabelCounter }
     from '../../../mobile/navigation/components/TabBarLabelCounter';
 import AbstractPollsPane from '../AbstractPollsPane';
 import type { AbstractProps } from '../AbstractPollsPane';
+import { isLocalParticipantModerator } from '../../../base/participants/functions';
 
 import PollCreate from './PollCreate';
 import PollsList from './PollsList';
@@ -24,6 +25,9 @@ const PollsPane = (props: AbstractProps) => {
     const navigation = useNavigation();
     const { isPollsTabFocused } = useSelector((state: IReduxState) => state['features/chat']);
     const { nbUnreadPolls } = useSelector((state: IReduxState) => state['features/polls']);
+    const isModerator = isLocalParticipantModerator(useSelector((state: IReduxState) => state));
+    console.log("ISModerator", isModerator);
+
 
     useEffect(() => {
         const activeUnreadPollsNr = !isPollsTabFocused && nbUnreadPolls > 0;
@@ -51,17 +55,29 @@ const PollsPane = (props: AbstractProps) => {
             hasExtraHeaderHeight = { true }
             style = { pollsStyles.pollPaneContainer as StyleType }>
             {
-                createMode
+                createMode && isModerator
                     ? <PollCreate setCreateMode = { setCreateMode } />
                     : <>
                         <PollsList setCreateMode = { setCreateMode } />
-                        <Button
+
+
+                        {/* { isModerator 
+                            ? <Button
+                                accessibilityLabel = 'polls.create.create'
+                                id = { t('polls.create.create') }
+                                labelKey = 'polls.create.create'
+                                onClick = { () => setCreateMode(true) }
+                                style = { createPollButtonStyles }
+                                type = { BUTTON_TYPES.PRIMARY } />
+                            :   
+                        } */}
+                        {/* <Button
                             accessibilityLabel = 'polls.create.create'
                             id = { t('polls.create.create') }
                             labelKey = 'polls.create.create'
                             onClick = { onCreate }
                             style = { createPollButtonStyles }
-                            type = { BUTTON_TYPES.PRIMARY } />
+                            type = { BUTTON_TYPES.PRIMARY } /> */}
                     </>
             }
         </JitsiScreen>

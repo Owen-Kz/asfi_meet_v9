@@ -26,7 +26,7 @@ const EndMeetingButton = (): JSX.Element => {
         Linking.openURL('https://www.asfischolar.net').catch(err => console.error('Failed to open URL:', err));
 
         // Optionally, dispatch appNavigate if needed for state management (though not necessary for redirect)
-        dispatch(appNavigate(undefined));
+        dispatch(appNavigate('https://www.asfischolar.net'));
     }, [ dispatch ]);
 
     return (

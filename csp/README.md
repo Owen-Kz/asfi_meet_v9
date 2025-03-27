@@ -65,10 +65,10 @@ All the ASFI Meet documentation is available in [the handbook](https://jitsi.git
 
 ## Security
 
-For a comprehensive description of all ASFI Meet's security aspects, please check [this link](https://jitsi.org/security).
+For a comprehensive description of all ASFI Meet's security aspects, please check [this link](https://asfischolar.net/security).
 
 For a detailed description of ASFI Meet's End-to-End Encryption (E2EE) implementation,
-please check [this link](https://jitsi.org/e2ee-whitepaper/).
+please check [this link](https://asfischolar.net/e2ee-whitepaper/).
 
 For information on reporting security vulnerabilities in ASFI Meet, see [SECURITY.md](./SECURITY.md).
 
