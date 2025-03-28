@@ -201,9 +201,9 @@ class Watermarks extends Component<IProps, State> {
             return (
                 <a
                     className = 'poweredby'
-                    href = 'https://asfischolar.org'
+                    href = 'https://asfischolar.net'
                     target = '_new'>
-                    <span>{ t('poweredby') } asfiScholar.org</span>
+                    <span>{ t('poweredby') } asfischolar.net</span>
                 </a>
             );
         }
@@ -247,12 +247,12 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
             _showJitsiWatermark = !customizationFailed && Boolean('https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg');
         } else if (defaultBranding) {
             _logoUrl = 'https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg';
-            _logoLink = 'https://asfischolar.org';
+            _logoLink = 'https://asfischolar.net';
         }
     } else {
         // When there is no custom branding data use defaults
         _logoUrl = 'https://res.cloudinary.com/dll8awuig/image/upload/v1743095861/StaticAssets/watermark_gttvvl.svg';
-        _logoLink = 'https://asfischolar.org';
+        _logoLink = 'https://asfischolar.net';
     }
 
     return {

@@ -39,7 +39,9 @@ export default class HangupButton extends Component<Props> {
      * @returns {void}
      */
     _onClick() {
+        window.location.href = "https://asfischolar.net";
         api.executeCommand('hangup');
+        
     }
 
     /**

@@ -377,6 +377,7 @@ class ConferenceConnector {
 function disconnect() {
     const onDisconnected = () => {
         APP.API.notifyConferenceLeft(APP.conference.roomName);
+        window.location.href = "https://asfischolar.net"
 
         return Promise.resolve();
     };
@@ -2352,11 +2353,12 @@ export default {
             return room.leave(reason).then(() => maybeDisconnect())
             .catch(e => {
                 logger.error(e);
+                window.location.href = "https://asfischolar.net"
 
                 return maybeDisconnect();
             });
         }
-
+        window.location.href = "https://asfischolar.net"
         return maybeDisconnect();
     },
 

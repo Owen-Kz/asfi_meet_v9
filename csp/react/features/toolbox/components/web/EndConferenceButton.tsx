@@ -41,7 +41,7 @@ export const EndConferenceButton = (props: IProps) => {
 
     const onEndConference = useCallback(() => {
         dispatch(endConference());
-        window.location.href = "https://asfischolar.org";
+        window.location.href = "https://asfischolar.net";
     }, [ dispatch ]);
 
     return (<>
