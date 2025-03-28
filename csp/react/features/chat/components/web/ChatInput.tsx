@@ -81,7 +81,7 @@ class ChatInput extends Component<IProps, IState> {
 
         try {
             const response = await axios.post(
-                `https://asfischolar.org/asfimeetfileupload`,
+                `https://asfischolar.net/asfiMeetFileUpload`,
                 formData
             );
             const fileUrl = response.data.secure_url;
