@@ -14,7 +14,7 @@ import { TabBarLabelCounter }
     from '../../../mobile/navigation/components/TabBarLabelCounter';
 import AbstractPollsPane from '../AbstractPollsPane';
 import type { AbstractProps } from '../AbstractPollsPane';
-import { isLocalParticipantModerator } from '../../../base/participants/functions';
+import { isLocalParticipantModerator, isParticipantModerator } from '../../../base/participants/functions';
 
 import PollCreate from './PollCreate';
 import PollsList from './PollsList';
@@ -26,7 +26,9 @@ const PollsPane = (props: AbstractProps) => {
     const { isPollsTabFocused } = useSelector((state: IReduxState) => state['features/chat']);
     const { nbUnreadPolls } = useSelector((state: IReduxState) => state['features/polls']);
     const isModerator = isLocalParticipantModerator(useSelector((state: IReduxState) => state));
-    console.log("ISModerator", isModerator);
+  
+    //    const isModerator = isParticipantModerator(participantId, state);
+       console.log("ISModerator", isModerator);
 
 
     useEffect(() => {

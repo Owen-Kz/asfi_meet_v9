@@ -5,6 +5,7 @@ import { isJwtFeatureEnabled } from '../base/jwt/functions';
 import { IGUMPendingState } from '../base/media/types';
 import { isScreenMediaShared } from '../screen-share/functions';
 import { isWhiteboardVisible } from '../whiteboard/functions';
+import PostersButton from './components/PostersButton';
 
 import { MAIN_TOOLBAR_BUTTONS_PRIORITY, TOOLBAR_TIMEOUT } from './constants';
 import { isButtonEnabled } from './functions.any';
@@ -184,6 +185,8 @@ export function getVisibleButtons({
 
         return acc;
     }, [] as IToolboxButton[]);
+
+
 
     // if we have 1 button in the overflow menu it is better to directly display it in the main toolbar by replacing
     // the "More" menu button with it.

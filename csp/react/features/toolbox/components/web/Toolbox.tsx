@@ -30,6 +30,10 @@ import HangupMenuButton from './HangupMenuButton';
 import { LeaveConferenceButton } from './LeaveConferenceButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import Separator from './Separator';
+import PostersButton from '../PostersButton';
+import { toggleChat, setIsPollsTabFocused } from '../../../chat/actions.web';
+import { CHAT_TABS } from '../../../chat/constants';
+
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -195,6 +199,7 @@ export default function Toolbox({
         dispatch(setToolbarHovered(true));
     }, [ dispatch ]);
 
+    
     /**
      * Handle focus on the toolbar.
      *
@@ -212,6 +217,16 @@ export default function Toolbox({
     const handleBlur = useCallback(() => {
         dispatch(setToolboxVisible(false));
     }, [ dispatch ]);
+const handlePostersClick = useCallback(() => {
+    if (!chatOpen) {
+        dispatch(toggleChat()); // open the chat panel if closed
+    }
+    dispatch(setIsPollsTabFocused(false)); // ensure polls is not active
+    dispatch({
+        type: 'SET_CHAT_TAB', // assuming this is how it's handled; if not, use the actual action
+        tabId: CHAT_TABS.POSTERS
+    });
+}, [ dispatch, chatOpen ]);
 
     if (iAmRecorder || iAmSipGateway) {
         return null;
@@ -232,6 +247,13 @@ export default function Toolbox({
         jwtDisabledButtons,
         mainToolbarButtonsThresholds
     });
+  
+//         overflowMenuButtons.push({
+//     key: 'posters',
+//     Content: PostersButton,
+//     group: 1
+// });
+
     const raiseHandInOverflowMenu = overflowMenuButtons.some(({ key }) => key === 'raisehand');
     const showReactionsInOverflowMenu = _shouldDisplayReactionsButtons
         && (
@@ -244,6 +266,7 @@ export default function Toolbox({
             className = { cx(rootClassNames, shiftUp && 'shift-up') }
             id = 'new-toolbox'>
             <div className = { containerClassName }>
+                
                 <div
                     className = 'toolbox-content-wrapper'
                     onBlur = { handleBlur }
@@ -253,16 +276,32 @@ export default function Toolbox({
                         onMouseOver
                     }) }>
 
+             
                     <div
                         className = 'toolbox-content-items'
                         ref = { _toolboxRef }>
+                      
+
                         {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (
                             <Content
                                 { ...rest }
                                 buttonKey = { key }
-                                key = { key } />))}
+                                key = { key } />))
+                        }
+
+                        
 
                         {Boolean(overflowMenuButtons.length) && (
+                             <>
+        {/* Posters Button */}
+     <button
+    type="button"
+    className="toolbox-button posters-button"
+    onClick={handlePostersClick}>
+    Posters
+</button>
+
+        
                             <OverflowMenuButton
                                 ariaControls = 'overflow-menu'
                                 buttons = { overflowMenuButtons.reduce<Array<IToolboxButton[]>>((acc, val) => {
@@ -295,37 +334,47 @@ export default function Toolbox({
                                 onVisibilityChange = { onSetOverflowVisible }
                                 showRaiseHandInReactionsMenu = { showRaiseHandInReactionsMenu }
                                 showReactionsMenu = { showReactionsInOverflowMenu } />
+                                </>
                         )}
 
-                        {isButtonEnabled('hangup', toolbarButtonsToUse) && (
-                            endConferenceSupported
-                                ? <HangupMenuButton
-                                    ariaControls = 'hangup-menu'
-                                    isOpen = { hangupMenuVisible }
-                                    key = 'hangup-menu'
-                                    notifyMode = { buttonsWithNotifyClick?.get('hangup-menu') }
-                                    onVisibilityChange = { onSetHangupVisible }>
-                                    <ContextMenu
-                                        accessibilityLabel = { t(toolbarAccLabel) }
-                                        className = { classes.hangupMenu }
-                                        hidden = { false }
-                                        inDrawer = { overflowDrawer }
-                                        onKeyDown = { onEscKey }>
-                                        <EndConferenceButton
-                                            buttonKey = 'end-meeting'
-                                            notifyMode = { buttonsWithNotifyClick?.get('end-meeting') } />
-                                        <LeaveConferenceButton
-                                            buttonKey = 'hangup'
-                                            notifyMode = { buttonsWithNotifyClick?.get('hangup') } />
-                                    </ContextMenu>
-                                </HangupMenuButton>
-                                : <HangupButton
-                                    buttonKey = 'hangup'
-                                    customClass = 'hangup-button'
-                                    key = 'hangup-button'
-                                    notifyMode = { buttonsWithNotifyClick.get('hangup') }
-                                    visible = { isButtonEnabled('hangup', toolbarButtonsToUse) } />
-                        )}
+                 {isButtonEnabled('hangup', toolbarButtonsToUse) && (
+    <>
+     
+
+        {endConferenceSupported
+            ? (
+                <HangupMenuButton
+                    ariaControls = 'hangup-menu'
+                    isOpen = { hangupMenuVisible }
+                    key = 'hangup-menu'
+                    notifyMode = { buttonsWithNotifyClick?.get('hangup-menu') }
+                    onVisibilityChange = { onSetHangupVisible }>
+                    <ContextMenu
+                        accessibilityLabel = { t(toolbarAccLabel) }
+                        className = { classes.hangupMenu }
+                        hidden = { false }
+                        inDrawer = { overflowDrawer }
+                        onKeyDown = { onEscKey }>
+                        <EndConferenceButton
+                            buttonKey = 'end-meeting'
+                            notifyMode = { buttonsWithNotifyClick?.get('end-meeting') } />
+                        <LeaveConferenceButton
+                            buttonKey = 'hangup'
+                            notifyMode = { buttonsWithNotifyClick?.get('hangup') } />
+                    </ContextMenu>
+                </HangupMenuButton>
+            ) : (
+                <HangupButton
+                    buttonKey = 'hangup'
+                    customClass = 'hangup-button'
+                    key = 'hangup-button'
+                    notifyMode = { buttonsWithNotifyClick.get('hangup') }
+                    visible = { true } />
+            )}
+    </>
+)}
+
+                        
                     </div>
                 </div>
             </div>

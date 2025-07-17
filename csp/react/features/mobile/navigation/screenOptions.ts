@@ -129,6 +129,8 @@ export const liveStreamScreenOptions = presentationScreenOptions;
  */
 export const participantsScreenOptions = presentationScreenOptions;
 
+export const postersScreenOptions = presentationScreenOptions;
+
 /**
  * Screen options for speaker stats modal.
  */

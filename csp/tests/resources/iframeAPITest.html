@@ -114,6 +114,24 @@
     externalAPIScript.type = "text/javascript";
     externalAPIScript.onload = function(){
         window.jitsiAPI = new JitsiMeetExternalAPI(domain, options);
+        // Check if the user is a moderator and show/hide the recording button
+window.jitsiAPI.addEventListener("participantRoleChanged", function(event) {
+    if (event.role === "moderator") {
+        window.jitsiAPI.executeCommand("overwriteConfig", {
+            TOOLBAR_BUTTONS: [
+                "microphone", "camera", "desktop", "chat", "raisehand",
+                "recording", "settings", "videoquality", "tileview", "fullscreen"
+            ]
+        });
+    } else {
+        window.jitsiAPI.executeCommand("overwriteConfig", {
+            TOOLBAR_BUTTONS: [
+                "microphone", "camera", "desktop", "chat", "raisehand",
+                "settings", "videoquality", "tileview", "fullscreen"
+            ]
+        });
+    }
+});
     }
     document.getElementsByTagName('head')[0].appendChild(externalAPIScript);
 </script>

@@ -9,6 +9,7 @@ import {
     ADD_MESSAGE_REACTION,
     CLEAR_MESSAGES,
     CLOSE_CHAT,
+    CLOSE_POSTERS,
     EDIT_MESSAGE,
     REMOVE_LOBBY_CHAT_PARTICIPANT,
     SEND_MESSAGE,
@@ -114,6 +115,13 @@ export function closeChat() {
         type: CLOSE_CHAT
     };
 }
+
+export function closePosters() {
+    return {
+        type: CLOSE_POSTERS
+    };
+}
+
 
 /**
  * Sends a chat message to everyone in the conference.

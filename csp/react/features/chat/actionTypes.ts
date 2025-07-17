@@ -43,6 +43,9 @@ export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
  */
 export const CLOSE_CHAT = 'CLOSE_CHAT';
 
+export const CLOSE_POSTERS = 'CLOSE_POSTERS';
+
+
 /**
  * The type of the action which signals to edit chat message.
  *
@@ -61,6 +64,9 @@ export const EDIT_MESSAGE = 'EDIT_MESSAGE';
  * }
  */
 export const OPEN_CHAT = 'OPEN_CHAT';
+
+export const OPEN_POSTERS = 'OPEN_POSTERS';
+
 
 /**
  * The type of the action which signals a send a chat message to everyone in the

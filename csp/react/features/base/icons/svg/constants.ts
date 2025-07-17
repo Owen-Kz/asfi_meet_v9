@@ -54,6 +54,7 @@ import { default as IconInfoCircle } from './info-circle.svg';
 import { default as IconInfo } from './info.svg';
 import { default as IconRecordLead } from './lead-record.svg';
 import { default as IconMessage } from './message.svg';
+import { default as IconPosters } from './posters.svg';
 import { default as IconMeter } from './meter.svg';
 import { default as IconMicSlash } from './mic-slash.svg';
 import { default as IconMic } from './mic.svg';
@@ -165,6 +166,7 @@ export const DEFAULT_ICON: Record<string, any> = {
     IconInfo,
     IconInfoCircle,
     IconMessage,
+    IconPosters,
     IconMeter,
     IconMic,
     IconMicSlash,

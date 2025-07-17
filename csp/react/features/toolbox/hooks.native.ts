@@ -13,6 +13,7 @@ import ScreenSharingButton from './components/native/ScreenSharingButton';
 import VideoMuteButton from './components/native/VideoMuteButton';
 import { isDesktopShareButtonDisabled } from './functions.native';
 import { ICustomToolbarButton, IToolboxNativeButton, NativeToolbarButton } from './types';
+import PosterButton from '../posters/components/native/PosterButton';
 
 
 const microphone = {
@@ -33,6 +34,11 @@ const chat = {
     group: 1
 };
 
+const posters = {
+    key: 'posters',
+    Content: PosterButton,
+    group: 1
+};
 const screensharing = {
     key: 'screensharing',
     Content: ScreenSharingButton,
@@ -102,6 +108,14 @@ function getChatButton() {
     }
 }
 
+function getPostersButton() {
+    const _iAmVisitor = useSelector(iAmVisitor);
+
+    if (!_iAmVisitor) {
+        return posters;
+    }
+}
+
 /**
  * A hook that returns the screen sharing button.
  *
@@ -153,6 +167,7 @@ export function useNativeToolboxButtons(
     const audioMuteButton = getAudioMuteButton();
     const videoMuteButton = getVideoMuteButton();
     const chatButton = getChatButton();
+    const postersButton = getPostersButton();
     const screenSharingButton = getScreenSharingButton();
     const tileViewButton = getTileViewButton();
     const overflowMenuButton = getOverflowMenuButton();
@@ -161,6 +176,7 @@ export function useNativeToolboxButtons(
         microphone: audioMuteButton,
         camera: videoMuteButton,
         chat: chatButton,
+        posters: postersButton,
         screensharing: screenSharingButton,
         raisehand,
         tileview: tileViewButton,

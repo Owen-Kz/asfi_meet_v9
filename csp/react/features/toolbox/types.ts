@@ -18,6 +18,7 @@ export interface IToolboxNativeButton {
 
 export type ToolbarButton = 'camera' |
     'chat' |
+    'posters' |
     'closedcaptions' |
     'desktop' |
     'download' |
@@ -77,6 +78,7 @@ export interface ICustomToolbarButton {
 
 export type NativeToolbarButton = 'camera' |
     'chat' |
+    'posters' |
     'microphone' |
     'raisehand' |
     'screensharing' |

@@ -30,9 +30,21 @@ export function getFixedPlatformStyle(style?: StyleType | StyleType[]) {
  * @param {Object} base - The base object containing the `lineHeight` property.
  * @returns {Object}
  */
-export function withPixelLineHeight(base: any) {
+// export function withPixelLineHeight(base: any) {
+//     return {
+//         ...base,
+//         lineHeight: `${base.lineHeight}px`
+//     };
+// }
+
+export const withPixelLineHeight = (typography: any) => {
+    if (!typography || typeof typography.lineHeight === 'undefined') {
+        console.warn('withPixelLineHeight: missing lineHeight in typography:', typography);
+        return {};
+    }
+
     return {
-        ...base,
-        lineHeight: `${base.lineHeight}px`
+        lineHeight: `${parseFloat(typography.lineHeight)}px`
     };
-}
+};
+

@@ -3,7 +3,9 @@ import BasePageObject from './BasePageObject';
 const AUDIO_MUTE = 'Mute microphone';
 const AUDIO_UNMUTE = 'Unmute microphone';
 const CHAT = 'Open chat';
+const POSTERS = 'Open posters';
 const CLOSE_CHAT = 'Close chat';
+const CLOSE_POSTERS = 'Close posters';
 const CLOSE_PARTICIPANTS_PANE = 'Close participants pane';
 const DESKTOP = 'Start sharing your screen';
 const HANGUP = 'Leave the meeting';
@@ -165,6 +167,15 @@ export default class Toolbar extends BasePageObject {
         return this.getButton(CHAT).click();
     }
 
+        /**
+     * Clicks on the Posters button that opens Posters panel.
+     */
+    clickPostersButton(): Promise<void> {
+        this.participant.log('Clicking on: Chat Button');
+
+        return this.getButton(POSTERS).click();
+    }
+
     /**
      * Clicks on the chat button that closes chat panel.
      */
@@ -172,6 +183,15 @@ export default class Toolbar extends BasePageObject {
         this.participant.log('Clicking on: Close Chat Button');
 
         return this.getButton(CLOSE_CHAT).click();
+    }
+
+      /**
+     * Clicks on the Posters button that closes Posters panel.
+     */
+    clickClosePostersButton(): Promise<void> {
+        this.participant.log('Clicking on: Close Posters Button');
+
+        return this.getButton(CLOSE_POSTERS).click();
     }
 
     /**

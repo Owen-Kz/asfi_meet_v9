@@ -42,6 +42,12 @@ export interface IChatState {
     privateMessageRecipient?: IParticipant;
 }
 
+export interface IPostersState {
+    isLobbyChatActive: boolean;
+    isOpen: boolean;
+   
+}
+
 ReducerRegistry.register<IChatState>('features/chat', (state = DEFAULT_STATE, action): IChatState => {
     switch (action.type) {
     case ADD_MESSAGE: {

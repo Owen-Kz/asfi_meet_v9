@@ -159,7 +159,7 @@ class OverflowMenu extends PureComponent<IProps, IState> {
                 { this._renderRaiseHandButton(buttonProps) }
                 {/* @ts-ignore */}
                 <SecurityDialogButton { ...buttonProps } />
-                <RecordButton { ...buttonProps } />
+                {/* <RecordButton { ...buttonProps } /> */}
                 <LiveStreamButton { ...buttonProps } />
                 <LinkToSalesforceButton { ...buttonProps } />
                 <WhiteboardButton { ...buttonProps } />

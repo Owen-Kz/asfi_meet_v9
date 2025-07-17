@@ -32,3 +32,21 @@ export function arePollsDisabled(stateful: IStateful) {
 
     return state['features/base/config']?.disablePolls || iAmVisitor(state);
 }
+
+
+
+/**
+ * Extracts the meeting ID from the current window URL.
+ * The meeting ID is defined as the first segment of the path after the domain.
+ * Example: https://localhost:3000/MeetingName → "MeetingName"
+ *
+ * @returns {string | undefined} The meeting ID, or undefined if not found.
+ */
+export function getMeetingId(): string | undefined {
+    if (typeof window === 'undefined' || !window.location.pathname) {
+        return undefined;
+    }
+
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    return pathSegments.length > 0 ? pathSegments[0] : undefined;
+}

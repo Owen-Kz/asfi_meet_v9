@@ -66,6 +66,9 @@ export const CONFERENCE_TIMER_ENABLED = 'conference-timer.enabled';
  */
 export const CHAT_ENABLED = 'chat.enabled';
 
+export const POSTERS_ENABLED = 'posters.enabled';
+
+
 /**
  * Flag indicating if the filmstrip should be enabled.
  * Default: enabled (true).

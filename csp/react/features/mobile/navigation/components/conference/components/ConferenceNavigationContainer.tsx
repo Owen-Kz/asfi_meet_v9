@@ -57,6 +57,7 @@ import {
     lobbyNavigationContainerScreenOptions,
     navigationContainerTheme,
     participantsScreenOptions,
+    postersScreenOptions,
     recordingScreenOptions,
     salesforceScreenOptions,
     securityScreenOptions,
@@ -77,6 +78,7 @@ import {
     conferenceNavigationRef
     // @ts-ignore
 } from '../ConferenceNavigationContainerRef';
+import PostersPane from '../../../../../posters/components/web/PostersPane';
 
 
 const ConferenceStack = createStackNavigator();
@@ -125,6 +127,13 @@ const ConferenceNavigationContainer = () => {
                     options = {{
                         ...participantsScreenOptions,
                         title: t('participantsPane.title')
+                    }} />
+                <ConferenceStack.Screen
+                    component = { PostersPane }
+                    name = { 'posters' }
+                    options = {{
+                        ...postersScreenOptions,
+                        title: t('posters.title')
                     }} />
                 <ConferenceStack.Screen
                     component = { SecurityDialog }

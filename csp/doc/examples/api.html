@@ -16,6 +16,24 @@
                 interfaceConfigOverwrite: {}
             }
             var api = new JitsiMeetExternalAPI(domain, options);
+            // Check if the user is a moderator and show/hide the recording button
+api.addEventListener("participantRoleChanged", function(event) {
+    if (event.role === "moderator") {
+        api.executeCommand("overwriteConfig", {
+            TOOLBAR_BUTTONS: [
+                "microphone", "camera", "desktop", "chat", "raisehand",
+                "recording", "settings", "videoquality", "tileview", "fullscreen"
+            ]
+        });
+    } else {
+        api.executeCommand("overwriteConfig", {
+            TOOLBAR_BUTTONS: [
+                "microphone", "camera", "desktop", "chat", "raisehand",
+                "settings", "videoquality", "tileview", "fullscreen"
+            ]
+        });
+    }
+});
         </script>
     </body>
 </html>

@@ -130,6 +130,7 @@ export default class Toolbar extends Component<Props, IState> {
                 onMouseOver = { onMouseOver }>
                 { this.state.showAudioButton && <AudioMuteButton /> }
                 { this.state.showVideoButton && <VideoMuteButton /> }
+                
                 <HangupButton customClass = 'hangup-button' />
             </div>
         );

@@ -71,6 +71,7 @@ import ToggleCameraButton from './components/web/ToggleCameraButton';
 import VideoSettingsButton from './components/web/VideoSettingsButton';
 import { isButtonEnabled, isDesktopShareButtonDisabled } from './functions.web';
 import { ICustomToolbarButton, IToolboxButton, ToolbarButton } from './types';
+import PostersButton from '../posters/components/web/PostersButton';
 
 
 const microphone = {
@@ -95,6 +96,12 @@ const chat = {
     key: 'chat',
     Content: ChatButton,
     group: 2
+};
+
+const posters = {
+    key: 'posters',
+    Content: PostersButton,
+    group: 2,
 };
 
 const desktop = {
@@ -299,6 +306,7 @@ export function useToolboxButtons(
         profile,
         desktop: desktopSharing,
         chat,
+        posters,
         raisehand,
         reactions,
         'participants-pane': participants,
