@@ -253,7 +253,7 @@ const Chat = ({
                 {posters.map(poster => (
                     <a 
                         key={poster.poster_deck_id}
-                        href={`/event/poster/${poster.poster_deck_id}`}
+                        href={`https://posters.asfischolar.com/event/poster/${poster.poster_deck_id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={classes.posterCard}
