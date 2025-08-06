@@ -254,5 +254,58 @@ export default {
         ...BaseTheme.typography.bodyShortRegular,
         color: BaseTheme.palette.text01,
         flex: 1
-    }
+    },
+    previewContainer: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        maxWidth: '100%',
+        marginVertical: 4,
+    },
+    imagePreview: {
+        maxWidth: '100%',
+        maxHeight: 300,
+        borderRadius: 8,
+        marginBottom: 8,
+        objectFit: 'contain' as const,
+    },
+    documentPreview: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: 12,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 8,
+    },
+    fileIcon: {
+        fontSize: 24,
+    },
+    fileType: {
+        fontWeight: 'bold' as const,
+    },
+    fileLink: {
+        color: '#0066cc',
+        textDecoration: 'none' as const,
+        display: 'inline-block',
+        marginTop: 4,
+        ':hover': {
+            textDecoration: 'underline' as const,
+        },
+    },
+    downloadLink: {
+        color: '#666',
+        fontSize: 12,
+        textAlign: 'center' as const,
+    },
+    chatMessage: {
+        color: '#000',
+        fontSize: 14,
+    },
+    chatLink: {
+        color: '#0066cc',
+        textDecoration: 'none' as const,
+        ':hover': {
+            textDecoration: 'underline' as const,
+        },
+    },
+
 };

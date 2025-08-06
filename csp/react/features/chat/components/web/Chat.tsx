@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
+import * as pdfjsLib from 'pdfjs-dist';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
-import { getLocalParticipant, getParticipantById } from '../../../base/participants/functions';
+import { getLocalParticipant } from '../../../base/participants/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import Tabs from '../../../base/ui/components/web/Tabs';
 import { arePollsDisabled, getMeetingId } from '../../../conference/functions.any';
@@ -19,6 +20,8 @@ import DisplayNameForm from './DisplayNameForm';
 import KeyboardAvoider from './KeyboardAvoider';
 import MessageContainer from './MessageContainer';
 import MessageRecipient from './MessageRecipient';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface IProps extends AbstractProps {
     _isModal: boolean;
@@ -39,6 +42,7 @@ interface PosterDeck {
     poster_deck_owner: string;
     poster_deck_description: string;
     poster_deck_image: string;
+    poster_preview_image: string;
 }
 
 const useStyles = makeStyles()(theme => ({
@@ -50,7 +54,6 @@ const useStyles = makeStyles()(theme => ({
         transition: 'width .16s ease-in-out',
         width: `${CHAT_SIZE}px`,
         zIndex: 300,
-
         '@media (max-width: 580px)': {
             height: '100dvh',
             position: 'fixed',
@@ -59,7 +62,6 @@ const useStyles = makeStyles()(theme => ({
             top: 0,
             width: 'auto'
         },
-
         '*': {
             userSelect: 'text',
             '-webkit-user-select': 'text'
@@ -67,20 +69,13 @@ const useStyles = makeStyles()(theme => ({
     },
     chatHeader: {
         height: '60px',
-        position: 'relative',
-        width: '100%',
-        zIndex: 1,
         display: 'flex',
         justifyContent: 'space-between',
         padding: `${theme.spacing(3)} ${theme.spacing(4)}`,
         alignItems: 'center',
         boxSizing: 'border-box',
         color: theme.palette.text01,
-        ...withPixelLineHeight(theme.typography.heading6),
-
-        '.jitsi-icon': {
-            cursor: 'pointer'
-        }
+        ...withPixelLineHeight(theme.typography.heading6)
     },
     chatPanel: {
         display: 'flex',
@@ -139,6 +134,25 @@ const useStyles = makeStyles()(theme => ({
         ...withPixelLineHeight(theme.typography.labelSmall),
         color: theme.palette.text02
     },
+    posterLink: {
+        display: 'block',
+        textAlign: 'center',
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.ui03,
+        color: theme.palette.text01,
+        textDecoration: 'none',
+        '&:hover': {
+            backgroundColor: theme.palette.ui04
+        }
+    },
+    pdfContainer: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.palette.ui03
+    },
     emptyState: {
         display: 'flex',
         flexDirection: 'column',
@@ -146,60 +160,123 @@ const useStyles = makeStyles()(theme => ({
         justifyContent: 'center',
         height: '100%',
         color: theme.palette.text03
+    },
+    loadMoreButton: {
+        margin: theme.spacing(2),
+        padding: theme.spacing(1, 3),
+        backgroundColor: theme.palette.action01,
+        color: theme.palette.text01,
+        borderRadius: theme.shape.borderRadius,
+        border: 'none',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: theme.palette.action01Hover
+        }
+    },
+    paginationContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: theme.spacing(2)
     }
 }));
 
-const Chat = ({
-    _isModal,
-    _isOpen,
-    _isPollsEnabled,
-    _isPollsTabFocused,
-    _messages,
-    _nbUnreadMessages,
-    _nbUnreadPolls,
-    _onSendMessage,
-    _onToggleChat,
-    _onToggleChatTab,
-    _onTogglePollsTab,
-    _showNamePrompt,
-    dispatch,
-    t
-}: IProps) => {
+/** PDF Preview Component */
+const PDFPreview = ({ pdfUrl }: { pdfUrl: string }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const renderPDF = async () => {
+            try {
+                setLoading(true);
+                setError('');
+
+                const pdfResponse = await fetch(pdfUrl);
+                const pdfBlob = await pdfResponse.blob();
+                const pdfData = await pdfBlob.arrayBuffer();
+
+                const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+                const pdf = await loadingTask.promise;
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 0.8 });
+
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const context = canvas.getContext('2d');
+                if (!context) return;
+
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                await page.render({ canvasContext: context, viewport }).promise;
+                setLoading(false);
+            } catch (err) {
+                console.error('Error rendering PDF preview:', err);
+                setError('Failed to load PDF preview');
+                setLoading(false);
+            }
+        };
+        renderPDF();
+    }, [pdfUrl]);
+
+    if (loading) return <div>Loading PDF preview...</div>;
+    if (error) return <div>{error}</div>;
+
+    return <canvas ref={canvasRef} />;
+};
+
+const Chat = (props: IProps) => {
+    const {
+        _isModal,
+        _isOpen,
+        _isPollsEnabled,
+        _messages,
+        _nbUnreadMessages,
+        _nbUnreadPolls,
+        _showNamePrompt,
+        dispatch,
+        t
+    } = props;
+
     const { classes, cx } = useStyles();
     const [activeTab, setActiveTab] = useState(CHAT_TABS.CHAT);
     const [posters, setPosters] = useState<PosterDeck[]>([]);
     const [loadingPosters, setLoadingPosters] = useState(true);
     const [postersError, setPostersError] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const postersPerPage = 6;
 
     useEffect(() => {
-        if (activeTab === CHAT_TABS.POSTERS && posters.length === 0 && !postersError) {
-            fetchPosters();
+        if (activeTab === CHAT_TABS.POSTERS) {
+            setPosters([]);
+            setCurrentPage(1);
+            fetchPosters(1, true);
         }
     }, [activeTab]);
 
-    const fetchPosters = async () => {
+    const fetchPosters = async (page = 1, replace = false) => {
         try {
             setLoadingPosters(true);
+            setPostersError('');
             const meetingId = getMeetingId();
-            
             if (!meetingId) {
                 setPostersError('Unauthorized access');
                 return;
             }
 
-            const response = await fetch(`https://posters.asfischolar.com/getposterdecks/${meetingId}`);
-            
-            if (!response.ok) {
-                throw new Error('Failed to fetch posters');
-            }
+            const response = await fetch(`https://posters.asfischolar.com/getposterdecks/${meetingId}?page=${page}&limit=${postersPerPage}`);
+            if (!response.ok) throw new Error('Failed to fetch posters');
 
             const data = await response.json();
-            console.log(data)
-            const allPosterDecks = JSON.parse(data.PosterDecks);
-            
-            if (allPosterDecks.length > 0) {
-                setPosters(allPosterDecks);
-            } else {
+            const newPosters = JSON.parse(data.PosterDecks);
+
+            if (newPosters.length > 0) {
+                setPosters(prev => replace ? newPosters : [...prev, ...newPosters]);
+                setTotalPages(data.totalPages);
+            } else if (page === 1) {
                 setPostersError('No posters available');
             }
         } catch (error) {
@@ -207,6 +284,14 @@ const Chat = ({
             setPostersError('Failed to load posters');
         } finally {
             setLoadingPosters(false);
+        }
+    };
+
+    const loadMorePosters = () => {
+        if (currentPage < totalPages) {
+            const nextPage = currentPage + 1;
+            setCurrentPage(nextPage);
+            fetchPosters(nextPage);
         }
     };
 
@@ -218,159 +303,102 @@ const Chat = ({
         dispatch(toggleChat());
     }, []);
 
-    const onEscClick = useCallback((event: React.KeyboardEvent) => {
-        if (event.key === 'Escape' && _isOpen) {
-            event.preventDefault();
-            event.stopPropagation();
-            onToggleChat();
-        }
-    }, [_isOpen]);
-
     const onChangeTab = useCallback((id: string) => {
         setActiveTab(id);
+        setCurrentPage(1);
         dispatch(setIsPollsTabFocused(id === CHAT_TABS.POLLS));
     }, []);
 
     const renderPosters = () => {
-        if (loadingPosters) {
-            return (
-                <div className={classes.emptyState}>
-                    {t('chat.posters.loading')}
-                </div>
-            );
-        }
+        if (loadingPosters) return <div className={classes.emptyState}>{t('chat.posters.loading')}</div>;
+        if (postersError) return <div className={classes.emptyState}>{postersError}</div>;
+        if (!posters.length) return <div className={classes.emptyState}>{t('chat.posters.none')}</div>;
 
-        if (postersError) {
-            return (
-                <div className={classes.emptyState}>
-                    {postersError}
-                </div>
-            );
-        }
+        const hasMore = currentPage < totalPages;
 
         return (
-            <div className={classes.postersGrid}>
-                {posters.map(poster => (
-                    <a 
-                        key={poster.poster_deck_id}
-                        href={`https://posters.asfischolar.com/event/poster/${poster.poster_deck_id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={classes.posterCard}
-                    >
-                        <div className={classes.posterImageContainer}>
-                            {poster.poster_deck_image ? (
-                                <img 
-                                    src={poster.poster_deck_image} 
-                                    alt={poster.poster_deck_title}
-                                    className={classes.posterImage}
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE5IDV2MTRIMVY1aDhtMTYgMTRIN1Y3aDEydjEyek0xNiAxLjFMMTIgNS4xIDggMS4xSDF2MTNoMTV2LTEzek0xMyA4YTEuNSAxLjUgMCAxMS0zIDAgMS41IDEuNSAwIDAxMyAweiIgZmlsbD0iIzc1NzU3NSIvPjwvc3ZnPg==';
-                                    }}
-                                />
-                            ) : (
-                                <div>No Image</div>
-                            )}
-                        </div>
-                        <div className={classes.posterInfo}>
-                            <div className={classes.posterTitle}>
-                                {poster.poster_deck_title}
+            <>
+                <div className={classes.postersGrid}>
+                    {posters.map(poster => (
+                        <div key={poster.poster_deck_id} className={classes.posterCard}>
+                            <div className={classes.posterImageContainer}>
+                                {poster.poster_preview_image ? (
+                                    poster.poster_preview_image.endsWith('.pdf') ? (
+                                        <div className={classes.pdfContainer}>
+                                            <PDFPreview pdfUrl={poster.poster_preview_image} />
+                                        </div>
+                                    ) : (
+                                        <img
+                                            src={poster.poster_preview_image}
+                                            alt={poster.poster_deck_title}
+                                            className={classes.posterImage}
+                                             crossOrigin="anonymous"
+                                        />
+                                    )
+                                ) : (
+                                    <div>No Image</div>
+                                )}
                             </div>
-                            <div className={classes.posterOwner}>
-                                {poster.poster_deck_owner}
+                            <div className={classes.posterInfo}>
+                                <div className={classes.posterTitle}>{poster.poster_deck_title}</div>
+                                <div className={classes.posterOwner}>{poster.poster_deck_owner}</div>
                             </div>
+                            <a
+                                href={`https://posters.asfischolar.com/event/poster/${poster.poster_deck_id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={classes.posterLink}
+                            >
+                                {t('chat.posters.view')}
+                            </a>
                         </div>
-                    </a>
-                ))}
-            </div>
+                    ))}
+                </div>
+                {hasMore && (
+                    <div className={classes.paginationContainer}>
+                        <button onClick={loadMorePosters} className={classes.loadMoreButton}>
+                            {t('chat.posters.loadMore')}
+                        </button>
+                    </div>
+                )}
+            </>
         );
     };
 
-    function renderChat() {
-        return (
-            <>
-                {(_isPollsEnabled || true) && renderTabs()}
-                <div
-                    aria-labelledby={CHAT_TABS.CHAT}
-                    className={cx(
-                        classes.chatPanel,
-                        !_isPollsEnabled && classes.chatPanelNoTabs,
-                        activeTab !== CHAT_TABS.CHAT && 'hide'
-                    )}
-                    id={`${CHAT_TABS.CHAT}-panel`}
-                    role="tabpanel"
-                    tabIndex={0}
-                >
-                    <MessageContainer messages={_messages} />
-                    <MessageRecipient />
-                    <ChatInput onSend={onSendMessage} />
-                </div>
-                
-                {_isPollsEnabled && (
-                    <div
-                        aria-labelledby={CHAT_TABS.POLLS}
-                        className={cx(classes.pollsPanel, activeTab !== CHAT_TABS.POLLS && 'hide')}
-                        id={`${CHAT_TABS.POLLS}-panel`}
-                        role="tabpanel"
-                        tabIndex={0}
-                    >
-                        <PollsPane />
-                    </div>
-                )}
-                
-                <div
-                    aria-labelledby={CHAT_TABS.POSTERS}
-                    className={cx(classes.postersPanel, activeTab !== CHAT_TABS.POSTERS && 'hide')}
-                    id={`${CHAT_TABS.POSTERS}-panel`}
-                    role="tabpanel"
-                    tabIndex={0}
-                >
-                    {renderPosters()}
-                </div>
-                
-                <KeyboardAvoider />
-            </>
-        );
-    }
-
-    function renderTabs() {
-        return (
-            <Tabs
-                accessibilityLabel={t(_isPollsEnabled ? 'chat.titleWithPolls' : 'chat.title')}
-                onChange={onChangeTab}
-                selected={activeTab}
-                tabs={[
-                    {
-                        accessibilityLabel: t('chat.tabs.chat'),
-                        countBadge: activeTab !== CHAT_TABS.CHAT && _nbUnreadMessages > 0 ? _nbUnreadMessages : undefined,
-                        id: CHAT_TABS.CHAT,
-                        controlsId: `${CHAT_TABS.CHAT}-panel`,
-                        label: t('chat.tabs.chat')
-                    },
-                    ...(_isPollsEnabled ? [{
+    const renderTabs = () => (
+        <Tabs
+            accessibilityLabel={t(_isPollsEnabled ? 'chat.titleWithPolls' : 'chat.title')}
+            onChange={onChangeTab}
+            selected={activeTab}
+            tabs={[
+                {
+                    accessibilityLabel: t('chat.tabs.chat'),
+                    countBadge: activeTab !== CHAT_TABS.CHAT && _nbUnreadMessages > 0 ? _nbUnreadMessages : undefined,
+                    id: CHAT_TABS.CHAT,
+                    controlsId: `${CHAT_TABS.CHAT}-panel`,
+                    label: t('chat.tabs.chat')
+                },
+                ...(_isPollsEnabled
+                    ? [{
                         accessibilityLabel: t('chat.tabs.polls'),
                         countBadge: activeTab !== CHAT_TABS.POLLS && _nbUnreadPolls > 0 ? _nbUnreadPolls : undefined,
                         id: CHAT_TABS.POLLS,
                         controlsId: `${CHAT_TABS.POLLS}-panel`,
                         label: t('chat.tabs.polls')
-                    }] : []),
-                    {
-                        accessibilityLabel: t('chat.tabs.posters'),
-                        id: CHAT_TABS.POSTERS,
-                        controlsId: `${CHAT_TABS.POSTERS}-panel`,
-                        label: t('Posters')
-                    }
-                ]}
-            />
-        );
-    }
+                    }]
+                    : []),
+                {
+                    accessibilityLabel: t('chat.tabs.posters'),
+                    id: CHAT_TABS.POSTERS,
+                    controlsId: `${CHAT_TABS.POSTERS}-panel`,
+                    label: t('Posters')
+                }
+            ]}
+        />
+    );
 
-    return (
-        _isOpen ? <div
-            className={classes.container}
-            id="sideToolbarContainer"
-            onKeyDown={onEscClick}
-        >
+    return _isOpen ? (
+        <div className={classes.container} id="sideToolbarContainer">
             <ChatHeader
                 className={cx('chat-header', classes.chatHeader)}
                 isPollsEnabled={_isPollsEnabled}
@@ -378,12 +406,30 @@ const Chat = ({
             />
             {_showNamePrompt
                 ? <DisplayNameForm isPollsEnabled={_isPollsEnabled} />
-                : renderChat()}
-        </div> : null
-    );
+                : (
+                    <>
+                        {(_isPollsEnabled || true) && renderTabs()}
+                        <div className={cx(classes.chatPanel, !_isPollsEnabled && classes.chatPanelNoTabs, activeTab !== CHAT_TABS.CHAT && 'hide')}>
+                            <MessageContainer messages={_messages} />
+                            <MessageRecipient />
+                            <ChatInput onSend={onSendMessage} />
+                        </div>
+                        {_isPollsEnabled && (
+                            <div className={cx(classes.pollsPanel, activeTab !== CHAT_TABS.POLLS && 'hide')}>
+                                <PollsPane />
+                            </div>
+                        )}
+                        <div className={cx(classes.postersPanel, activeTab !== CHAT_TABS.POSTERS && 'hide')}>
+                            {renderPosters()}
+                        </div>
+                        <KeyboardAvoider />
+                    </>
+                )}
+        </div>
+    ) : null;
 };
 
-function _mapStateToProps(state: IReduxState, _ownProps: any) {
+function _mapStateToProps(state: IReduxState) {
     const { isOpen, isPollsTabFocused, messages, nbUnreadMessages } = state['features/chat'];
     const { nbUnreadPolls } = state['features/polls'];
     const _localParticipant = getLocalParticipant(state);
@@ -398,6 +444,6 @@ function _mapStateToProps(state: IReduxState, _ownProps: any) {
         _nbUnreadPolls: nbUnreadPolls,
         _showNamePrompt: !_localParticipant?.name
     };
-} 
+}
 
 export default translate(connect(_mapStateToProps)(Chat));

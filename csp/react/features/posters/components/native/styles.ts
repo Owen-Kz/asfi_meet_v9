@@ -254,5 +254,51 @@ export default {
         ...BaseTheme.typography.bodyShortRegular,
         color: BaseTheme.palette.text01,
         flex: 1
+    },
+    // ... your existing styles ...
+    
+    previewContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        margin: '8px 0'
+    },
+    
+    imagePreview: {
+        maxWidth: '100%',
+        maxHeight: '300px',
+        borderRadius: '4px',
+        border: '1px solid #ddd'
+    },
+    
+    fileLink: {
+        textDecoration: 'none',
+        color: 'inherit'
+    },
+    
+    pdfPreview: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '8px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '4px',
+        border: '1px solid #ddd'
+    },
+    
+    filePreview: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '8px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '4px',
+        border: '1px solid #ddd'
+    },
+    
+    fileIcon: {
+        fontSize: '20px'
     }
+    
+
 };

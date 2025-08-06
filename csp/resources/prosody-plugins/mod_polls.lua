@@ -26,7 +26,7 @@ end
 
 --- Returns a table having occupant id and occupant name.
 --- If the id cannot be extracted from nick a nil value is returned
---- if the occupant name cannot be extracted from presence the Fellow Jitster
+--- if the occupant name cannot be extracted from presence the Fellow Participant
 --- name is used
 local function get_occupant_details(occupant)
     if not occupant then
@@ -35,9 +35,9 @@ local function get_occupant_details(occupant)
     local presence = occupant:get_presence();
     local occupant_name;
     if presence then
-        occupant_name = presence:get_child("nick", NS_NICK) and presence:get_child("nick", NS_NICK):get_text() or 'Fellow Jitster';
+        occupant_name = presence:get_child("nick", NS_NICK) and presence:get_child("nick", NS_NICK):get_text() or 'Fellow Participant';
     else
-        occupant_name = 'Fellow Jitster'
+        occupant_name = 'Fellow Participant'
     end
     local _, _, occupant_id = jid.split(occupant.nick)
     if not occupant_id then

@@ -465,7 +465,7 @@ function _translateLegacyConfig(oldValue: IConfig) {
     }
 
     newValue.defaultRemoteDisplayName
-        = newValue.defaultRemoteDisplayName || 'Fellow Jitster';
+        = newValue.defaultRemoteDisplayName || 'Fellow Participant';
 
     newValue.transcription = newValue.transcription || {};
     if (oldValue.transcribingEnabled !== undefined) {

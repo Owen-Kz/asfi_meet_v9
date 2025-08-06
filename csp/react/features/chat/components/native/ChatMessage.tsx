@@ -141,32 +141,134 @@ class ChatMessage extends Component<IChatMessageProps> {
      * @param {string} messageText - The message text.
      * @returns {React.ReactElement<*>}
      */
-    _renderMessageTextComponent(messageText: string) {
+_renderMessageTextComponent(messageText: string) {
+    // Cloudinary URL pattern matching
+    const cloudinaryUrlRegex = /https?:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/[^\s]+\.(jpg|jpeg|png|gif|pdf|docx?|xlsx?|pptx?)/i;
+    const isCloudinaryUrl = cloudinaryUrlRegex.test(messageText.trim());
 
-        if (messageText.length >= CHAR_LIMIT) {
+    // If the message is exactly a Cloudinary URL
+    if (isCloudinaryUrl) {
+        const url = messageText.trim();
+        const extension = url.split('.').pop()?.toLowerCase() || '';
+        
+        // Image preview for image files
+        if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
             return (
-                <Text
-                    selectable = { true }
-                    style = { styles.chatMessage }>
-                    { messageText }
-                </Text>
+                <div style={styles.previewContainer}>
+                    <img 
+                        src={url} 
+                        style={styles.imagePreview} 
+                        alt="File preview"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            // Fallback to regular URL display if image fails to load
+                            return (
+                                <a href={url} target="_blank" rel="noopener noreferrer" style={styles.fileLink}>
+                                    {url}
+                                </a>
+                            );
+                        }}
+                    />
+                    <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={styles.downloadLink}>
+                        Download Image
+                    </a>
+                </div>
+            );
+        }
+        
+        // PDF preview
+        if (extension === 'pdf') {
+            return (
+                <div style={styles.previewContainer}>
+                    <div style={styles.documentPreview}>
+                        <span style={styles.fileIcon}>📄</span>
+                        <span style={styles.fileType}>PDF Document</span>
+                    </div>
+                    <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={styles.fileLink}>
+                        Open PDF
+                    </a>
+                </div>
             );
         }
 
+        // Word document preview
+        if (['doc', 'docx'].includes(extension)) {
+            return (
+                <div style={styles.previewContainer}>
+                    <div style={styles.documentPreview}>
+                        <span style={styles.fileIcon}>📝</span>
+                        <span style={styles.fileType}>Word Document</span>
+                    </div>
+                    <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={styles.fileLink}>
+                        Download Document
+                    </a>
+                </div>
+            );
+        }
+
+        // Excel preview
+        if (['xls', 'xlsx'].includes(extension)) {
+            return (
+                <div style={styles.previewContainer}>
+                    <div style={styles.documentPreview}>
+                        <span style={styles.fileIcon}>📊</span>
+                        <span style={styles.fileType}>Excel Spreadsheet</span>
+                    </div>
+                    <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={styles.fileLink}>
+                        Download Spreadsheet
+                    </a>
+                </div>
+            );
+        }
+
+        // Default for other Cloudinary files
         return (
-            <Linkify
-                linkStyle = { styles.chatLink }
-                style = { styles.chatMessage }>
-                { replaceNonUnicodeEmojis(messageText) }
-            </Linkify>
+            <div style={styles.previewContainer}>
+                <a 
+                    href={url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={styles.fileLink}>
+                    <div style={styles.documentPreview}>
+                        <span style={styles.fileIcon}>📁</span>
+                        <span style={styles.fileType}>Download File ({extension.toUpperCase()})</span>
+                    </div>
+                </a>
+            </div>
         );
     }
 
-    /**
-     * Renders the message privacy notice, if necessary.
-     *
-     * @returns {React.ReactElement<*> | null}
-     */
+    // Original handling for non-file URLs or mixed content
+    return (
+        <Linkify
+            linkStyle={styles.chatLink}
+            style={styles.chatMessage}>
+            {messageText}
+        </Linkify>
+    );
+}
+
+/**
+ * Renders the message privacy notice, if necessary.
+ *
+ * @returns {React.ReactElement<*> | null}
+ */
     _renderPrivateNotice() {
         const { message, knocking } = this.props;
 

@@ -185,9 +185,118 @@ const useStyles = makeStyles()((theme: Theme) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap'
+        },
+        // New styles for media preview
+        previewContainer: {
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: theme.spacing(1),
+            margin: theme.spacing(1, 0)
+        },
+        imagePreview: {
+            maxWidth: '100%',
+            maxHeight: '300px',
+            borderRadius: '4px',
+            border: `1px solid ${theme.palette.divider}`
+        },
+        fileLink: {
+            textDecoration: 'none',
+            color: 'inherit'
+        },
+        pdfPreview: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: theme.spacing(1),
+            padding: theme.spacing(1),
+            backgroundColor: theme.palette.ui02,
+            borderRadius: '4px',
+            border: `1px solid ${theme.palette.divider}`
+        },
+        filePreview: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: theme.spacing(1),
+            padding: theme.spacing(1),
+            backgroundColor: theme.palette.ui02,
+            borderRadius: '4px',
+            border: `1px solid ${theme.palette.divider}`
+        },
+        fileIcon: {
+            fontSize: '20px'
         }
     };
 });
+
+const MediaPreview = ({ url, classes }: { url: string; classes: any }) => {
+    const extension = url.split('.').pop()?.toLowerCase();
+    
+    // Image preview
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(extension || '')) {
+        return (
+            <div className={classes.previewContainer}>
+                <img 
+                    src={url} 
+                    className={classes.imagePreview} 
+                    alt="File preview"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                />
+                <a 
+                    href={url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={classes.fileLink}>
+                    {url}
+                </a>
+            </div>
+        );
+    }
+    
+    // PDF preview
+    if (extension === 'pdf') {
+        return (
+            <div className={classes.previewContainer}>
+                <a 
+                    href={url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={classes.fileLink}>
+                    <div className={classes.pdfPreview}>
+                        <span className={classes.fileIcon}>📄</span>
+                        <span>PDF Document</span>
+                    </div>
+                </a>
+            </div>
+        );
+    }
+    
+    // Other file types
+    return (
+        <div className={classes.previewContainer}>
+            <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={classes.fileLink}>
+                <div className={classes.filePreview}>
+                    <span className={classes.fileIcon}>
+                        {extension === 'docx' ? '📝' : 
+                         extension === 'xlsx' ? '📊' : 
+                         extension === 'pptx' ? '📑' : '📂'}
+                    </span>
+                    <span>Download {extension?.toUpperCase()} file</span>
+                </div>
+            </a>
+        </div>
+    );
+};
+
+function isMediaUrl(text: string): boolean {
+    const fileUrlRegex = /(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|pdf|docx?|xlsx?|pptx?|txt|mp4|mov|avi|mp3|wav))\b/gi;
+    const match = text.match(fileUrlRegex);
+    return !!match && match[0] === text.trim();
+}
 
 const ChatMessage = ({
     message,
@@ -218,11 +327,6 @@ const ChatMessage = ({
         setIsReactionsOpen(false);
     }, []);
 
-    /**
-     * Renders the display name of the sender.
-     *
-     * @returns {React$Element<*>}
-     */
     function _renderDisplayName() {
         return (
             <div
@@ -233,11 +337,6 @@ const ChatMessage = ({
         );
     }
 
-    /**
-     * Renders the message privacy notice.
-     *
-     * @returns {React$Element<*>}
-     */
     function _renderPrivateNotice() {
         return (
             <div className = { classes.privateMessageNotice }>
@@ -246,11 +345,6 @@ const ChatMessage = ({
         );
     }
 
-    /**
-     * Renders the time at which the message was sent.
-     *
-     * @returns {React$Element<*>}
-     */
     function _renderTimestamp() {
         return (
             <div className = { cx('timestamp', classes.timestamp) }>
@@ -259,11 +353,6 @@ const ChatMessage = ({
         );
     }
 
-    /**
-     * Renders the reactions for the message.
-     *
-     * @returns {React$Element<*>}
-     */
     const renderReactions = useMemo(() => {
         if (!message.reactions || message.reactions.size === 0) {
             return null;
@@ -359,7 +448,12 @@ const ChatMessage = ({
                                             user: message.displayName
                                         })}
                                 </span>
-                                <Message text = { getMessageText(message) } />
+                                {console.log(message)}
+                                {isMediaUrl(message.message) ? (
+                                    <MediaPreview url={message.message} classes={classes} />
+                                ) : (
+                                    <Message text={getMessageText(message)} />
+                                )}
                                 {(message.privateMessage || (message.lobbyChat && !knocking))
                                     && _renderPrivateNotice()}
                                 <div className = { classes.chatMessageFooter }>
@@ -401,12 +495,6 @@ const ChatMessage = ({
     );
 };
 
-/**
- * Maps part of the Redux store to the props of this component.
- *
- * @param {Object} state - The Redux state.
- * @returns {IProps}
- */
 function _mapStateToProps(state: IReduxState, { message }: IProps) {
     const { knocking } = state['features/lobby'];
     const localParticipantId = state['features/base/participants'].local?.id;

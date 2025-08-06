@@ -71,30 +71,37 @@ class ChatInput extends Component<IProps, IState> {
         }
     }
 
-    async _sendFile() {
-        const { selectedFile } = this.state;
-        if (!selectedFile) return;
+// In ChatInput.tsx
+async _sendFile() {
+    const { selectedFile } = this.state;
+    if (!selectedFile) return;
 
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('timestamp', String(Math.floor(Date.now() / 1000)));
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('timestamp', String(Math.floor(Date.now() / 1000)));
 
-        try {
-            const response = await axios.post(
-                `https://asfischolar.net/asfiMeetFileUpload`,
-                formData
-            );
-            const fileUrl = response.data.secure_url;
-            console.log('Uploaded file URL:', fileUrl);
-            this.props.onSend(fileUrl || "An Error Accoured while uploading file please try again");
-        } catch (error) {
-            this.props.onSend(error.response?.data || error.message);
-            console.error('File upload failed:', error.response?.data || error.message);
-        }
-
-        // Clear file preview and selection after sending
-        this.setState({ filePreview: null, selectedFile: null });
+    try {
+        const response = await axios.post(
+            `https://asfischolar.net/asfiMeetFileUpload`,
+            formData
+        );
+        const fileUrl = response.data.secure_url;
+        
+        // Send both URL and file type
+        this.props.onSend({
+            content: fileUrl,
+            fileType: selectedFile.type
+        });
+        
+    } catch (error: any) {
+        this.props.onSend({
+            content: error.response?.data?.message || error.message,
+            isError: true
+        });
     }
+
+    this.setState({ filePreview: null, selectedFile: null });
+}
 
     render() {
         return (
