@@ -14,6 +14,7 @@ import { IChatMessageProps } from '../../types';
 
 import MessageMenu from './MessageMenu';
 import ReactButton from './ReactButton';
+import ChatFileMessage from './ChatFileMessage';
 
 interface IProps extends IChatMessageProps {
     shouldDisplayChatMessageMenu: boolean;
@@ -57,21 +58,11 @@ const useStyles = makeStyles()((theme: Theme) => {
                 '&.privatemessage': {
                     backgroundColor: theme.palette.support05
                 },
-                '&.local': {
-                    backgroundColor: theme.palette.ui04,
-                    borderRadius: '12px 4px 12px 12px',
-
-                    '&.privatemessage': {
-                        backgroundColor: theme.palette.support05
-                    }
-                },
-
                 '&.error': {
                     backgroundColor: theme.palette.actionDanger,
                     borderRadius: 0,
                     fontWeight: 100
                 },
-
                 '&.lobbymessage': {
                     backgroundColor: theme.palette.support05
                 }
@@ -104,9 +95,6 @@ const useStyles = makeStyles()((theme: Theme) => {
         reactionCount: {
             fontSize: '0.8rem',
             color: theme.palette.grey[400]
-        },
-        replyButton: {
-            padding: '2px'
         },
         replyWrapper: {
             display: 'flex',
@@ -186,117 +174,12 @@ const useStyles = makeStyles()((theme: Theme) => {
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap'
         },
-        // New styles for media preview
-        previewContainer: {
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: theme.spacing(1),
+        fileMessageContainer: {
             margin: theme.spacing(1, 0)
-        },
-        imagePreview: {
-            maxWidth: '100%',
-            maxHeight: '300px',
-            borderRadius: '4px',
-            border: `1px solid ${theme.palette.divider}`
-        },
-        fileLink: {
-            textDecoration: 'none',
-            color: 'inherit'
-        },
-        pdfPreview: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: theme.spacing(1),
-            padding: theme.spacing(1),
-            backgroundColor: theme.palette.ui02,
-            borderRadius: '4px',
-            border: `1px solid ${theme.palette.divider}`
-        },
-        filePreview: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: theme.spacing(1),
-            padding: theme.spacing(1),
-            backgroundColor: theme.palette.ui02,
-            borderRadius: '4px',
-            border: `1px solid ${theme.palette.divider}`
-        },
-        fileIcon: {
-            fontSize: '20px'
         }
+        
     };
 });
-
-const MediaPreview = ({ url, classes }: { url: string; classes: any }) => {
-    const extension = url.split('.').pop()?.toLowerCase();
-    
-    // Image preview
-    if (['jpg', 'jpeg', 'png', 'gif'].includes(extension || '')) {
-        return (
-            <div className={classes.previewContainer}>
-                <img 
-                    src={url} 
-                    className={classes.imagePreview} 
-                    alt="File preview"
-                    onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                />
-                <a 
-                    href={url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={classes.fileLink}>
-                    {url}
-                </a>
-            </div>
-        );
-    }
-    
-    // PDF preview
-    if (extension === 'pdf') {
-        return (
-            <div className={classes.previewContainer}>
-                <a 
-                    href={url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={classes.fileLink}>
-                    <div className={classes.pdfPreview}>
-                        <span className={classes.fileIcon}>📄</span>
-                        <span>PDF Document</span>
-                    </div>
-                </a>
-            </div>
-        );
-    }
-    
-    // Other file types
-    return (
-        <div className={classes.previewContainer}>
-            <a 
-                href={url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={classes.fileLink}>
-                <div className={classes.filePreview}>
-                    <span className={classes.fileIcon}>
-                        {extension === 'docx' ? '📝' : 
-                         extension === 'xlsx' ? '📊' : 
-                         extension === 'pptx' ? '📑' : '📂'}
-                    </span>
-                    <span>Download {extension?.toUpperCase()} file</span>
-                </div>
-            </a>
-        </div>
-    );
-};
-
-function isMediaUrl(text: string): boolean {
-    const fileUrlRegex = /(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|pdf|docx?|xlsx?|pptx?|txt|mp4|mov|avi|mp3|wav))\b/gi;
-    const match = text.match(fileUrlRegex);
-    return !!match && match[0] === text.trim();
-}
 
 const ChatMessage = ({
     message,
@@ -327,7 +210,7 @@ const ChatMessage = ({
         setIsReactionsOpen(false);
     }, []);
 
-    function _renderDisplayName() {
+    const _renderDisplayName = () => {
         return (
             <div
                 aria-hidden = { true }
@@ -335,23 +218,81 @@ const ChatMessage = ({
                 {message.displayName}
             </div>
         );
-    }
+    };
 
-    function _renderPrivateNotice() {
+    const _renderPrivateNotice = () => {
         return (
             <div className = { classes.privateMessageNotice }>
                 {getPrivateNoticeMessage(message)}
             </div>
         );
-    }
+    };
 
-    function _renderTimestamp() {
+    const _renderTimestamp = () => {
         return (
             <div className = { cx('timestamp', classes.timestamp) }>
                 {getFormattedTimestamp(message)}
             </div>
         );
-    }
+    };
+
+    const _renderMessageContent = () => {
+        const messageText = getMessageText(message);
+
+        // Check if this is a file message
+        if (message.isFileMessage) {
+            return (
+                <div className={classes.fileMessageContainer}>
+                    <ChatFileMessage 
+                        url={messageText}
+                        fileType={message.fileType}
+                    />
+                </div>
+            );
+        }
+
+        // Check if this is a URL that should be previewed
+        const urlRegex = /https?:\/\/[^\s]+/i;
+        const urlMatch = messageText.match(urlRegex);
+        if (urlMatch && urlMatch[0] === messageText.trim()) {
+            return (
+                <div className={classes.fileMessageContainer}>
+                    <ChatFileMessage 
+                        url={messageText}
+                        fileType={message.fileType || getFileTypeFromUrl(messageText)}
+                    />
+                </div>
+            );
+        }
+
+        // Default text message
+        return <Message text={messageText} />;
+    };
+
+    const getFileTypeFromUrl = (url: string) => {
+        const extension = url.split('.').pop()?.toLowerCase();
+        switch (extension) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+                return `image/${extension}`;
+            case 'pdf':
+                return 'application/pdf';
+            case 'doc':
+                return 'application/msword';
+            case 'docx':
+                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+            case 'xls':
+            case 'xlsx':
+                return 'application/vnd.ms-excel';
+            case 'ppt':
+            case 'pptx':
+                return 'application/vnd.ms-powerpoint';
+            default:
+                return 'application/octet-stream';
+        }
+    };
 
     const renderReactions = useMemo(() => {
         if (!message.reactions || message.reactions.size === 0) {
@@ -359,14 +300,10 @@ const ChatMessage = ({
         }
 
         const reactionsArray = Array.from(message.reactions.entries())
-            .map(([ reaction, participants ]) => {
-                return { reaction,
-                    participants };
-            })
+            .map(([ reaction, participants ]) => ({ reaction, participants }))
             .sort((a, b) => b.participants.size - a.participants.size);
 
         const totalReactions = reactionsArray.reduce((sum, { participants }) => sum + participants.size, 0);
-        const numReactionsDisplayed = 3;
 
         const reactionsContent = (
             <div className = { classes.reactionsPopover }>
@@ -399,12 +336,12 @@ const ChatMessage = ({
                 trigger = 'hover'
                 visible = { isReactionsOpen }>
                 <div className = { classes.reactionBox }>
-                    {reactionsArray.slice(0, numReactionsDisplayed).map(({ reaction }, index) =>
+                    {reactionsArray.slice(0, 3).map(({ reaction }, index) =>
                         <span key = { index }>{reaction}</span>
                     )}
-                    {reactionsArray.length > numReactionsDisplayed && (
+                    {reactionsArray.length > 3 && (
                         <span className = { classes.reactionCount }>
-                            +{totalReactions - numReactionsDisplayed}
+                            +{totalReactions - 3}
                         </span>
                     )}
                 </div>
@@ -448,12 +385,7 @@ const ChatMessage = ({
                                             user: message.displayName
                                         })}
                                 </span>
-                                {console.log(message)}
-                                {isMediaUrl(message.message) ? (
-                                    <MediaPreview url={message.message} classes={classes} />
-                                ) : (
-                                    <Message text={getMessageText(message)} />
-                                )}
+                                {_renderMessageContent()}
                                 {(message.privateMessage || (message.lobbyChat && !knocking))
                                     && _renderPrivateNotice()}
                                 <div className = { classes.chatMessageFooter }>

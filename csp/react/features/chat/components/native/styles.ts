@@ -29,7 +29,54 @@ const inputBar = {
  * for the future).
  */
 export default {
-
+previewContainer: {
+    marginTop: 8,
+    marginBottom: 8,
+},
+imagePreview: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    borderRadius: 4,
+    marginBottom: 8,
+},
+documentPreview: {
+    // display: 'flex',
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    padding: 8,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 4,
+    marginBottom: 8,
+},
+fileIcon: {
+    fontSize: 24,
+    marginRight: 8,
+},
+fileType: {
+    fontSize: 14,
+    color: '#333',
+},
+fileLink: {
+    color: '#1E88E5',
+    textDecorationLine: 'underline',
+    marginBottom: 8,
+},
+downloadLink: {
+    color: '#1E88E5',
+    textDecorationLine: 'underline',
+    fontSize: 12,
+    marginBottom: 8,
+},
+chatMessage: {
+    color: '#333',
+    fontSize: 14,
+    lineHeight: 20,
+},
+chatLink: {
+    color: '#1E88E5',
+    textDecorationLine: 'underline',
+},
     /**
      * Background of the chat screen.
      */
@@ -89,14 +136,8 @@ export default {
         width: 32
     },
 
-    chatLink: {
-        color: BaseTheme.palette.link01
-    },
+   
 
-    chatMessage: {
-        ...BaseTheme.typography.bodyShortRegular,
-        color: BaseTheme.palette.text01
-    },
 
     /**
      * Wrapper for the details together, such as name, message and time.
@@ -255,57 +296,6 @@ export default {
         color: BaseTheme.palette.text01,
         flex: 1
     },
-    previewContainer: {
-        display: 'flex',
-        flexDirection: 'column' as const,
-        maxWidth: '100%',
-        marginVertical: 4,
-    },
-    imagePreview: {
-        maxWidth: '100%',
-        maxHeight: 300,
-        borderRadius: 8,
-        marginBottom: 8,
-        objectFit: 'contain' as const,
-    },
-    documentPreview: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: 12,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 8,
-    },
-    fileIcon: {
-        fontSize: 24,
-    },
-    fileType: {
-        fontWeight: 'bold' as const,
-    },
-    fileLink: {
-        color: '#0066cc',
-        textDecoration: 'none' as const,
-        display: 'inline-block',
-        marginTop: 4,
-        ':hover': {
-            textDecoration: 'underline' as const,
-        },
-    },
-    downloadLink: {
-        color: '#666',
-        fontSize: 12,
-        textAlign: 'center' as const,
-    },
-    chatMessage: {
-        color: '#000',
-        fontSize: 14,
-    },
-    chatLink: {
-        color: '#0066cc',
-        textDecoration: 'none' as const,
-        ':hover': {
-            textDecoration: 'underline' as const,
-        },
-    },
+   
 
 };

@@ -2,6 +2,8 @@ import React, { Component, RefObject } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { sendMessage } from '../../actions.web';
+
 
 import { IReduxState, IStore } from '../../../app/types';
 import { isMobileBrowser } from '../../../base/environment/utils';
@@ -72,6 +74,9 @@ class ChatInput extends Component<IProps, IState> {
     }
 
 // In ChatInput.tsx
+// Add this import at the top
+
+// Update the _sendFile method
 async _sendFile() {
     const { selectedFile } = this.state;
     if (!selectedFile) return;
@@ -87,22 +92,20 @@ async _sendFile() {
         );
         const fileUrl = response.data.secure_url;
         
-        // Send both URL and file type
-        this.props.onSend({
-            content: fileUrl,
-            fileType: selectedFile.type
-        });
+        // Send the file message with type information
+        this.props.dispatch(sendMessage(fileUrl, true, selectedFile.type));
         
     } catch (error: any) {
-        this.props.onSend({
-            content: error.response?.data?.message || error.message,
-            isError: true
-        });
+        this.props.dispatch(sendMessage(
+            error.response?.data?.message || error.message,
+            true,
+            undefined,
+            true // isError
+        ));
     }
 
     this.setState({ filePreview: null, selectedFile: null });
 }
-
     render() {
         return (
             <div className={`chat-input-container${this.state.message.trim().length ? ' populated' : ''}`}>

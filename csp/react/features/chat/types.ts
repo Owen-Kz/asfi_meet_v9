@@ -15,6 +15,8 @@ export interface IMessage {
     reactions: Map<string, Set<string>>;
     recipient: string;
     timestamp: number;
+    isFileMessage?: boolean;
+    fileType?: string;
 }
 
 /**
