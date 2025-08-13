@@ -310,8 +310,8 @@ const Chat = (props: IProps) => {
     }, []);
 
     const renderPosters = () => {
-        if (loadingPosters) return <div className={classes.emptyState}>{t('chat.posters.loading')}</div>;
-        if (postersError) return <div className={classes.emptyState}>{postersError}</div>;
+        if (loadingPosters) return <div className={classes.emptyState}>{t('Loading Posters')}</div>;
+        if (postersError) return <div className={classes.emptyState}>{postersError} <br/>  <div> <a href="https://posters.asfischolar.com/uploadPoster" target='_blank'> <button className={classes.loadMoreButton}> Upload Poster </button></a></div></div>;
         if (!posters.length) return <div className={classes.emptyState}>{t('chat.posters.none')}</div>;
 
         const hasMore = currentPage < totalPages;
@@ -353,6 +353,11 @@ const Chat = (props: IProps) => {
                             </a>
                         </div>
                     ))}
+                    <div>
+                       <a href="https://posters.asfischolar.com/uploadPoster" target='_blank'>
+                         <button className={classes.loadMoreButton}> Upload Poster </button>
+                         </a>
+                    </div>
                 </div>
                 {hasMore && (
                     <div className={classes.paginationContainer}>
