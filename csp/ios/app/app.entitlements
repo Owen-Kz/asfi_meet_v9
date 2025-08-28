@@ -4,9 +4,9 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:call.asfischolar.net</string>
-		<string>applinks:beta.call.asfischolar.net</string>
-		<string>applinks:call.asfischolar.net</string>
+		<string>applinks:stream.paymeo.co</string>
+		<string>applinks:beta.stream.paymeo.co</string>
+		<string>applinks:stream.paymeo.co</string>
 	</array>
 	<key>com.apple.developer.siri</key>
 	<true/>

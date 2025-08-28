@@ -1,19 +1,19 @@
 
 <VirtualHost *:80>
-    ServerName call.asfischolar.net
-    Redirect permanent / https://call.asfischolar.net/
+    ServerName stream.paymeo.co
+    Redirect permanent / https://stream.paymeo.co/
 </VirtualHost>
 
 <VirtualHost *:443>
-    ServerName call.asfischolar.net
+    ServerName stream.paymeo.co
 
     # enable HTTP/2, if available
     Protocols h2 http/1.1
 
     SSLEngine on
     SSLProxyEngine on
-    SSLCertificateFile /etc/jitsi/meet/call.asfischolar.net.crt
-    SSLCertificateKeyFile /etc/jitsi/meet/call.asfischolar.net.key
+    SSLCertificateFile /etc/jitsi/meet/stream.paymeo.co.crt
+    SSLCertificateKeyFile /etc/jitsi/meet/stream.paymeo.co.key
 
     Header always set Strict-Transport-Security "max-age=63072000"
 
@@ -28,7 +28,7 @@
 
     ErrorDocument 404 /static/404.html
 
-    Alias "/config.js" "/etc/jitsi/meet/call.asfischolar.net-config.js"
+    Alias "/config.js" "/etc/jitsi/meet/stream.paymeo.co-config.js"
     <Location /config.js>
         Require all granted
     </Location>

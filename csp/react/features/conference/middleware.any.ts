@@ -201,7 +201,7 @@ function _checkIframe(state: IReduxState, dispatch: IStore['dispatch']) {
 
         const mapping: Record<string, string> = {
             '8x8.vc': 'https://jaas.8x8.vc',
-            'call.asfischolar.net': 'https://asfischolar.net/jaas'
+            'stream.paymeo.co': 'https://asfischolar.net/jaas'
         };
 
         const jaasDomain = mapping[hostname];

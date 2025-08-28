@@ -27,7 +27,7 @@ And many more!
 
 ## Using ASFI Meet
 
-Using ASFI Meet is straightforward, as it's browser based. Head over to [call.asfischolar.net](https://call.asfischolar.net) and give it a try. It's scalable and free to use. All you need is a Google, Facebook or GitHub account in order to start a meeting. All browsers are supported!
+Using ASFI Meet is straightforward, as it's browser based. Head over to [stream.paymeo.co](https://stream.paymeo.co) and give it a try. It's scalable and free to use. All you need is a Google, Facebook or GitHub account in order to start a meeting. All browsers are supported!
 
 Using mobile? No problem, you can either use your mobile web browser or our fully-featured
 mobile apps:

@@ -14,9 +14,9 @@ import { ADD_KNOWN_DOMAINS } from './actionTypes';
  * out of the Android manifest.
  */
 export const DEFAULT_STATE = [
-    'call.asfischolar.net',
-    'beta.call.asfischolar.net',
-    'call.asfischolar.net',
+    'stream.paymeo.co',
+    'beta.stream.paymeo.co',
+    'stream.paymeo.co',
     '8x8.vc'
 ];
 

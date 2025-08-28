@@ -1,1 +1,1 @@
-export const SECURITY_URL = 'https://call.asfischolar.net/security/';
+export const SECURITY_URL = 'https://stream.paymeo.co/security/';

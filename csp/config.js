@@ -30,26 +30,26 @@ var config = {
 
     hosts: {
         // XMPP domain.
-        domain: 'call.asfischolar.net',
+        domain: 'stream.paymeo.co',
 
         // When using authentication, domain for guest users.
         // anonymousdomain: 'guest.example.com',
 
         // Domain for authenticated users. Defaults to <domain>.
-        // authdomain: 'call.asfischolar.net',
+        // authdomain: 'stream.paymeo.co',
 
         // Focus component domain. Defaults to focus.<domain>.
-        // focus: 'focus.call.asfischolar.net',
+        // focus: 'focus.stream.paymeo.co',
 
         // XMPP MUC domain. FIXME: use XEP-0030 to discover it.
-        muc: 'conference.' + subdomain + 'call.asfischolar.net',
+        muc: 'conference.' + subdomain + 'stream.paymeo.co',
     },
 
     // BOSH URL. FIXME: use XEP-0156 to discover it.
-    bosh: 'https://call.asfischolar.net/' + subdir + 'http-bind',
+    bosh: 'https://stream.paymeo.co/' + subdir + 'http-bind',
 
     // Websocket URL (XMPP)
-    // websocket: 'wss://call.asfischolar.net/' + subdir + 'xmpp-websocket',
+    // websocket: 'wss://stream.paymeo.co/' + subdir + 'xmpp-websocket',
 
     // Whether BOSH should be preferred over WebSocket if both are configured.
     // preferBosh: false,
@@ -57,11 +57,11 @@ var config = {
     // The real JID of focus participant - can be overridden here
     // Do not change username - FIXME: Make focus username configurable
     // https://github.com/jitsi/jitsi-meet/issues/7376
-    // focusUserJid: 'focus@auth.call.asfischolar.net',
+    // focusUserJid: 'focus@auth.stream.paymeo.co',
 
     // Option to send conference requests to jicofo over http (requires nginx rule for it)
     // conferenceRequestUrl:
-    //   'https://<!--# echo var="http_host" default="call.asfischolar.net" -->/' + subdir + 'conference-request/v1',
+    //   'https://<!--# echo var="http_host" default="stream.paymeo.co" -->/' + subdir + 'conference-request/v1',
 
     // Options related to the bridge (colibri) data channel
     bridgeChannel: {
@@ -376,9 +376,9 @@ var config = {
     //     appKey: '<APP_KEY>', // Specify your app key here.
     //     // A URL to redirect the user to, after authenticating
     //     // by default uses:
-    //     // 'https://call.asfischolar.net/static/oauth.html'
+    //     // 'https://stream.paymeo.co/static/oauth.html'
     //     redirectURI:
-    //          'https://call.asfischolar.net/subfolder/static/oauth.html',
+    //          'https://stream.paymeo.co/subfolder/static/oauth.html',
     // },
 
     // configuration for all things recording related. Existing settings will be migrated here in the future.
@@ -1083,8 +1083,8 @@ var config = {
         // The STUN servers that will be used in the peer to peer connections
         stunServers: [
 
-            // { urls: 'stun:call.asfischolar.net:3478' },
-            { urls: 'stun:meet-jit-si-turnrelay.call.asfischolar.net:443' },
+            // { urls: 'stun:stream.paymeo.co:3478' },
+            { urls: 'stun:meet-jit-si-turnrelay.stream.paymeo.co:443' },
         ],
     },
 
@@ -1116,7 +1116,7 @@ var config = {
         // rtcstatsStoreLogs: false,
 
         // In order to enable rtcstats one needs to provide a endpoint url.
-        // rtcstatsEndpoint: wss://rtcstats-server-pilot.call.asfischolar.net/,
+        // rtcstatsEndpoint: wss://rtcstats-server-pilot.stream.paymeo.co/,
 
         // The interval at which rtcstats will poll getStats, defaults to 10000ms.
         // If the value is set to 0 getStats won't be polled and the rtcstats client
@@ -1308,7 +1308,7 @@ var config = {
 
     // // The terms, privacy and help centre URL's.
     // legalUrls: {
-    //     helpCentre: 'https://web-cdn.call.asfischolar.net/faq/meet-faq.html',
+    //     helpCentre: 'https://web-cdn.stream.paymeo.co/faq/meet-faq.html',
     //     privacy: 'https://asfischolar.net/meet/privacy',
     //     terms: 'https://asfischolar.net/meet/terms'
     // },
@@ -1474,7 +1474,7 @@ var config = {
     // The URL of the moderated rooms microservice, if available. If it
     // is present, a link to the service will be rendered on the welcome page,
     // otherwise the app doesn't render it.
-    // moderatedRoomServiceUrl: 'https://moderated.call.asfischolar.net',
+    // moderatedRoomServiceUrl: 'https://moderated.stream.paymeo.co',
 
     // If true, tile view will not be enabled automatically when the participants count threshold is reached.
     // disableTileView: true,
@@ -1621,7 +1621,7 @@ var config = {
 
     /**
      * This property can be used to alter the generated meeting invite links (in combination with a branding domain
-     * which is retrieved internally by ASFI Meet) (e.g. https://call.asfischolar.net/someMeeting
+     * which is retrieved internally by ASFI Meet) (e.g. https://stream.paymeo.co/someMeeting
      * can become https://brandedDomain/roomAlias)
      */
     // brandingRoomAlias: null,
@@ -1865,7 +1865,7 @@ var config = {
 
 // Set the default values for JaaS customers
 if (enableJaaS) {
-    config.dialInNumbersUrl = 'https://conference-mapper.call.asfischolar.net/v1/access/dids';
-    config.dialInConfCodeUrl = 'https://conference-mapper.call.asfischolar.net/v1/access';
+    config.dialInNumbersUrl = 'https://conference-mapper.stream.paymeo.co/v1/access/dids';
+    config.dialInConfCodeUrl = 'https://conference-mapper.stream.paymeo.co/v1/access';
     config.roomPasswordNumberOfDigits = 10; // skip re-adding it (do not remove comment)
 }

@@ -35,12 +35,12 @@
 
     jitsiMeet.conferenceActivityType = JitsiMeetConferenceActivityType;
     jitsiMeet.customUrlScheme = @"org.jitsi.meet";
-    jitsiMeet.universalLinkDomains = @[@"call.asfischolar.net", @"call.asfischolar.net", @"beta.call.asfischolar.net"];
+    jitsiMeet.universalLinkDomains = @[@"stream.paymeo.co", @"stream.paymeo.co", @"beta.stream.paymeo.co"];
 
     jitsiMeet.defaultConferenceOptions = [JitsiMeetConferenceOptions fromBuilder:^(JitsiMeetConferenceOptionsBuilder *builder) {
 
         // For testing configOverrides a room needs to be set
-        // builder.room = @"https://call.asfischolar.net/test0988test";
+        // builder.room = @"https://stream.paymeo.co/test0988test";
 
         [builder setFeatureFlag:@"welcomepage.enabled" withBoolean:YES];
         [builder setFeatureFlag:@"ios.screensharing.enabled" withBoolean:YES];

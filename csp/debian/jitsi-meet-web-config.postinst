@@ -27,7 +27,7 @@ case "$1" in
         db_get jitsi-videobridge/jvb-hostname
         if [ -z "$RET" ] ; then
             # server hostname
-            db_set jitsi-videobridge/jvb-hostname "call.asfischolar.net"
+            db_set jitsi-videobridge/jvb-hostname "stream.paymeo.co"
             db_input critical jitsi-videobridge/jvb-hostname || true
             db_go
             db_get jitsi-videobridge/jvb-hostname
@@ -110,7 +110,7 @@ case "$1" in
                 # create self-signed certs (we also need them for the case of LE so we can start nginx)
                 CERT_KEY="/etc/jitsi/meet/$JVB_HOSTNAME.key"
                 CERT_CRT="/etc/jitsi/meet/$JVB_HOSTNAME.crt"
-                HOST="$( (hostname -s; echo call.asfischolar.net) | head -n 1)"
+                HOST="$( (hostname -s; echo stream.paymeo.co) | head -n 1)"
                 DOMAIN="$( (hostname -d; echo localdomain) | head -n 1)"
                 openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj \
                     "/O=$DOMAIN/OU=$HOST/CN=$JVB_HOSTNAME/emailAddress=webmaster@$HOST.$DOMAIN" \
@@ -119,7 +119,7 @@ case "$1" in
                     -reqexts SAN \
                     -extensions SAN \
                     -config <(cat /etc/ssl/openssl.cnf \
-                        <(printf "[SAN]\nsubjectAltName=DNS:call.asfischolar.net,DNS:$JVB_HOSTNAME"))
+                        <(printf "[SAN]\nsubjectAltName=DNS:stream.paymeo.co,DNS:$JVB_HOSTNAME"))
 
                 if [ "$CERT_CHOICE" = "$LE_CERT_CHOICE" ]; then
                     db_subst jitsi-meet/email domain "${JVB_HOSTNAME}"
@@ -140,9 +140,9 @@ case "$1" in
             cp /usr/share/jitsi-meet-web-config/config.js $JITSI_MEET_CONFIG
             # replaces needed config for multidomain as it works only with nginx
             if [[ "$FORCE_NGINX" = "true" ]] ; then
-                sed -i "s/conference.call.asfischolar.net/conference.<\!--# echo var=\"subdomain\" default=\"\" -->call.asfischolar.net/g" $JITSI_MEET_CONFIG
+                sed -i "s/conference.stream.paymeo.co/conference.<\!--# echo var=\"subdomain\" default=\"\" -->stream.paymeo.co/g" $JITSI_MEET_CONFIG
             fi
-            sed -i "s/call.asfischolar.net/$JVB_HOSTNAME/g" $JITSI_MEET_CONFIG
+            sed -i "s/stream.paymeo.co/$JVB_HOSTNAME/g" $JITSI_MEET_CONFIG
         fi
 
         if [ "$CERT_CHOICE" = "$LE_CERT_CHOICE" ] || [ "$CERT_CHOICE" = "$UPLOADED_CERT_CHOICE" ]; then
@@ -165,8 +165,8 @@ case "$1" in
             else
                 # old config, let's add the lines at the end. Adding var enableJaaS to avoid adding it on update again
                 echo "var enableJaaS = true;" >> $JITSI_MEET_CONFIG
-                echo "config.dialInNumbersUrl = 'https://conference-mapper.call.asfischolar.net/v1/access/dids';" >> $JITSI_MEET_CONFIG
-                echo "config.dialInConfCodeUrl = 'https://conference-mapper.call.asfischolar.net/v1/access';" >> $JITSI_MEET_CONFIG
+                echo "config.dialInNumbersUrl = 'https://conference-mapper.stream.paymeo.co/v1/access/dids';" >> $JITSI_MEET_CONFIG
+                echo "config.dialInConfCodeUrl = 'https://conference-mapper.stream.paymeo.co/v1/access';" >> $JITSI_MEET_CONFIG
 
                 # Sets roomPasswordNumberOfDigits only if there was not already set
                 if ! cat $JITSI_MEET_CONFIG | grep roomPasswordNumberOfDigits | grep -qv //; then
@@ -201,7 +201,7 @@ case "$1" in
                 if [ ! -f /etc/nginx/sites-enabled/$JVB_HOSTNAME.conf ] && ! [[ "$FORCE_OPENRESTY" = "true" ]] ; then
                     ln -s "$NGX_COMMON_CONF_PATH" /etc/nginx/sites-enabled/$JVB_HOSTNAME.conf
                 fi
-                sed -i "s/call.asfischolar.net/$JVB_HOSTNAME/g" "$NGX_COMMON_CONF_PATH"
+                sed -i "s/stream.paymeo.co/$JVB_HOSTNAME/g" "$NGX_COMMON_CONF_PATH"
 
                 if [[ "$FORCE_OPENRESTY" = "true" ]]; then
                     OPENRESTY_NGX_CONF_MD5_ORIG=$(dpkg-query -s openresty | sed -n '/\/nginx\.conf /{s@.* @@;p}')
@@ -239,7 +239,7 @@ case "$1" in
                 a2enmod rewrite ssl headers proxy_http proxy_wstunnel include
                 cp /usr/share/jitsi-meet-web-config/jitsi-meet.example-apache /etc/apache2/sites-available/$JVB_HOSTNAME.conf
                 a2ensite $JVB_HOSTNAME.conf
-                sed -i "s/call.asfischolar.net/$JVB_HOSTNAME/g" /etc/apache2/sites-available/$JVB_HOSTNAME.conf
+                sed -i "s/stream.paymeo.co/$JVB_HOSTNAME/g" /etc/apache2/sites-available/$JVB_HOSTNAME.conf
             fi
 
             if [ "$CERT_CHOICE" = "$UPLOADED_CERT_CHOICE" ] ; then

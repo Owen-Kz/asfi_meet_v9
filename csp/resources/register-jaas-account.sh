@@ -11,7 +11,7 @@ if [ -z "${DOMAIN}" ] || [ -z "${EMAIL}" ]; then
 fi
 
 JITSI_INSTALLATION="DEBIAN"
-JAAS_ENDPOINT="https://account-provisioning.cloudflare.call.asfischolar.net/operations"
+JAAS_ENDPOINT="https://account-provisioning.cloudflare.stream.paymeo.co/operations"
 CHALLENGE_FILE="/usr/share/jitsi-meet/.well-known/jitsi-challenge.txt"
 SUPPORT_MSG="Reach out to JaaS support or retry with /usr/share/jitsi-meet/scripts/register-jaas-account.sh"
 
