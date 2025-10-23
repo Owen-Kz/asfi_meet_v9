@@ -79,4 +79,5 @@ export default {
         backgroundColor: ColorPalette.lightGrey,
         opacity: 0.4
     }
+    
 };

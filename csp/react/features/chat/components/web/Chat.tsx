@@ -135,14 +135,18 @@ const useStyles = makeStyles()(theme => ({
         color: theme.palette.text02
     },
     posterLink: {
-        display: 'block',
-        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: theme.spacing(1),
         padding: theme.spacing(1),
-        backgroundColor: theme.palette.ui03,
+        backgroundColor: theme.palette.action01,
         color: theme.palette.text01,
         textDecoration: 'none',
+        transition: 'background-color 0.2s ease',
         '&:hover': {
-            backgroundColor: theme.palette.ui04
+            backgroundColor: theme.palette.action01Hover,
+            textDecoration: 'none'
         }
     },
     pdfContainer: {
@@ -159,7 +163,8 @@ const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        color: theme.palette.text03
+        color: theme.palette.text03,
+        textAlign: 'center'
     },
     loadMoreButton: {
         margin: theme.spacing(2),
@@ -177,6 +182,61 @@ const useStyles = makeStyles()(theme => ({
         display: 'flex',
         justifyContent: 'center',
         marginTop: theme.spacing(2)
+    },
+    refreshContainer: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: theme.spacing(2),
+        padding: `0 ${theme.spacing(1)}`
+    },
+    refreshButton: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+        padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+        backgroundColor: theme.palette.action01,
+        color: theme.palette.text01,
+        border: 'none',
+        borderRadius: theme.shape.borderRadius,
+        fontSize: '14px',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease',
+        '&:hover:not(:disabled)': {
+            backgroundColor: theme.palette.action01Hover
+        },
+        '&:disabled': {
+            opacity: 0.6,
+            cursor: 'not-allowed'
+        }
+    },
+    refreshIcon: {
+        animation: '$rotate 1s linear infinite'
+    },
+    spinner: {
+        width: '16px',
+        height: '16px',
+        border: '2px solid transparent',
+        borderTop: `2px solid ${theme.palette.text01}`,
+        borderRadius: '50%',
+        animation: '$spin 1s linear infinite'
+    },
+    externalIcon: {
+        marginLeft: theme.spacing(0.5),
+        flexShrink: 0
+    },
+    // Keyframes for animations
+    '@keyframes rotate': {
+        from: {
+            transform: 'rotate(0deg)'
+        },
+        to: {
+            transform: 'rotate(360deg)'
+        }
+    },
+    '@keyframes spin': {
+        to: {
+            transform: 'rotate(360deg)'
+        }
     }
 }));
 
@@ -295,6 +355,15 @@ const Chat = (props: IProps) => {
         }
     };
 
+    const refreshPosters = async () => {
+        try {
+            setCurrentPage(1);
+            await fetchPosters(1, true);
+        } catch (error) {
+            console.error('Error refreshing posters:', error);
+        }
+    };
+
     const onSendMessage = useCallback((text: string) => {
         dispatch(sendMessage(text));
     }, []);
@@ -311,13 +380,62 @@ const Chat = (props: IProps) => {
 
     const renderPosters = () => {
         if (loadingPosters) return <div className={classes.emptyState}>{t('Loading Posters')}</div>;
-        if (postersError) return <div className={classes.emptyState}>{postersError} <br/>  <div> <a href="https://posters.asfischolar.com/uploadPoster" target='_blank'> <button className={classes.loadMoreButton}> Upload Poster </button></a></div></div>;
-        if (!posters.length) return <div className={classes.emptyState}>{t('chat.posters.none')}</div>;
+        if (postersError) return (
+            <div className={classes.emptyState}>
+                {postersError} 
+                <br/>  
+                <div> 
+                    <a href="https://posters.asfischolar.com/uploadPoster" target='_blank' rel="noopener noreferrer">
+                        <button className={classes.loadMoreButton}>Upload Poster</button>
+                    </a>
+                </div>
+            </div>
+        );
+        if (!posters.length) return (
+            <div className={classes.emptyState}>
+                {t('chat.posters.none')}
+                <br/>
+                <a href="https://posters.asfischolar.com/uploadPoster" target='_blank' rel="noopener noreferrer">
+                    <button className={classes.loadMoreButton}>Upload Poster</button>
+                </a>
+            </div>
+        );
 
         const hasMore = currentPage < totalPages;
 
         return (
             <>
+                {/* Refresh Button */}
+                <div className={classes.refreshContainer}>
+                    <button 
+                        onClick={refreshPosters} 
+                        className={classes.refreshButton}
+                        disabled={loadingPosters}
+                    >
+                        {loadingPosters ? (
+                            <>
+                                <span className={classes.spinner}></span>
+                                {t('Refreshing...')}
+                            </>
+                        ) : (
+                            <>
+                                <svg 
+                                    width="16" 
+                                    height="16" 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    strokeWidth="2"
+                                    className={classes.refreshIcon}
+                                >
+                                    <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                </svg>
+                                {t('Refresh Posters')}
+                            </>
+                        )}
+                    </button>
+                </div>
+
                 <div className={classes.postersGrid}>
                     {posters.map(poster => (
                         <div key={poster.poster_deck_id} className={classes.posterCard}>
@@ -332,7 +450,7 @@ const Chat = (props: IProps) => {
                                             src={poster.poster_preview_image}
                                             alt={poster.poster_deck_title}
                                             className={classes.posterImage}
-                                             crossOrigin="anonymous"
+                                            crossOrigin="anonymous"
                                         />
                                     )
                                 ) : (
@@ -349,14 +467,25 @@ const Chat = (props: IProps) => {
                                 rel="noopener noreferrer"
                                 className={classes.posterLink}
                             >
-                                {t('chat.posters.view')}
+                                View Posters
+                                <svg 
+                                    width="14" 
+                                    height="14" 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    strokeWidth="2"
+                                    className={classes.externalIcon}
+                                >
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                                </svg>
                             </a>
                         </div>
                     ))}
                     <div>
-                       <a href="https://posters.asfischolar.com/uploadPoster" target='_blank'>
-                         <button className={classes.loadMoreButton}> Upload Poster </button>
-                         </a>
+                        <a href="https://posters.asfischolar.com/uploadPoster" target='_blank' rel="noopener noreferrer">
+                            <button className={classes.loadMoreButton}>Upload Poster</button>
+                        </a>
                     </div>
                 </div>
                 {hasMore && (
