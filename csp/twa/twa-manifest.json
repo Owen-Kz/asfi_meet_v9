@@ -1,6 +1,6 @@
 {
-  "packageId": "org.jitsi.meet",
-  "host": "stream.paymeo.co",
+  "packageId": "com.asfi.meet",
+  "host": "stream.paymeo.co", 
   "name": "ASFI Meet",
   "launcherName": "ASFI Meet",
   "display": "standalone",

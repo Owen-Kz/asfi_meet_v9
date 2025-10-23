@@ -1,10 +1,10 @@
-# Jitsi Meet Translation
+# ASFI Meet Translation
 
 ASFI Meet uses [i18next](http://i18next.com) library for translation.
 i18next uses separate json files for each language.
 
 
-## Translating Jitsi Meet
+## Translating ASFI Meet
 
 The translation of ASFI Meet is handled editing manually the language files.
 
